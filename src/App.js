@@ -1,13 +1,16 @@
 import React from 'react';
 import './App.css';
-import SignIn from "./component/signIn"
+import Routes from "./routes";
+import { HashRouter, Link } from 'react-router-dom';
+
 
 class App extends React.Component{
   render() {
     return (
-      <React.Fragment>
-        <SignIn />
-      </React.Fragment>
+      <HashRouter>
+        <Link to='/'></Link>
+        <Routes />
+      </HashRouter>
     );
   }
 }

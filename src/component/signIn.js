@@ -54,16 +54,54 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignInSide() {
+export default function SignInSide(name) {
   const classes = useStyles();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [helperText, setHelperText] = useState('');
+  const [errorUser, setErrorUser] = useState(false);
+  const [errorPass, setErrorPass] = useState(false);
+  const [helperTextPass, setHelperTextPass] = useState(false);
+  const [btnSignIn, setBtnSignIn] = useState(true);
+
+
+  function HandleChangeUser(event){
+    if(event.length > 0){
+      setHelperText('');
+      setErrorUser(false);
+    }else{
+      setHelperText('Username is Required')
+      setErrorUser(true);
+    }
+
+    if(username.length > 0 && password.length > 0){
+      setBtnSignIn(false)
+    }else{
+      setBtnSignIn(true)
+    }
+
+  }
+
+  function HandleChangePass(event){
+    if(event.length >0){
+      setHelperTextPass('');
+      setErrorPass(false);
+    }else{
+      setHelperTextPass('Password is Required');
+      setErrorPass(true);
+    }
+    if(username.length > 0 && password.length > 0){
+      setBtnSignIn(false)
+    }else{
+      setBtnSignIn(true)
+    }
+  }
 
   var userData = {
     username: username,
     password: password
   }
-
+   console.log(name);
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -83,12 +121,18 @@ export default function SignInSide() {
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus 
+              error={errorUser}
+              helperText={helperText}
               onChange = {(event)=> {
-                setUsername(event.target.value)
+                setUsername(event.target.value);
+                HandleChangeUser(event.target.value);
+              }}
+              onBlur= {(event)=>{
+                HandleChangeUser(event.target.value);
               }}
             />
             <TextField
@@ -101,8 +145,14 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              error={errorPass}
+              helperText={helperTextPass}
               onChange = {(event)=> {
-                setPassword(event.target.value)
+                setPassword(event.target.value);
+                HandleChangePass(event.target.value);
+              }}
+              onBlur={(event) => {
+                HandleChangePass(event.target.value);
               }}
             />
             <FormControlLabel
@@ -111,16 +161,16 @@ export default function SignInSide() {
             />
             <Button
               // type="submit"
+              disabled= {btnSignIn}
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
               onClick = {()=>{
                 console.log(userData);
-
-
-
               }}
+
+
             >
               Sign In
             </Button>

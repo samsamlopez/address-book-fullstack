@@ -6,10 +6,10 @@ import SignUp from "./component/signUp";
 import AddressTable from "./component/tables"; 
 
 
-export default function Routes() {
+export default function Routes({name}) {
     return (
         <Switch>
-            <Route exact path="/" component={SignIn} />
+            <Route exact path="/" render={()=><SignIn name={name}/>} />
             <Route path="/signup" component={SignUp} />
             <Route path="/address" component={AddressTable} />
         </Switch>

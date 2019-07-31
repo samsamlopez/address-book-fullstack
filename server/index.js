@@ -13,9 +13,6 @@ massive({
   }).then(db => {
     const app = express();
    
-
-    
-
     app.use(cors());  
     app.set('db', db);
   
@@ -23,7 +20,6 @@ massive({
     
     app.post('/api/users', users.create);
     app.post('/api/login', users.login);
-  
   
     const PORT = 3001;
     app.listen(PORT, () => {

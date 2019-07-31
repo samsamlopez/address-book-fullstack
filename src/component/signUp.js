@@ -17,7 +17,12 @@ import axios from 'axios';
 const useStyles = makeStyles(theme => ({
   '@global': {
     body: {
-      backgroundColor: theme.palette.common.white,
+      // backgroundColor: theme.palette.common.white,
+      background: 'url(https://source.unsplash.com/random?books)',
+      WebkitBackgroundSize: 'cover',
+      OBackgroundSize: 'cover',
+      backgroundSize:'cover',
+      backgroundPosition: 'center'
     },
   },
   paper: {
@@ -46,9 +51,18 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
-  const [token, setToken] = useState('');
 
-  localStorage.setItem('token', token);
+  const [changeF, setChangeF] = useState(false);
+  const [helperF, setHelperF] = useState('');
+  const [changeL, setChangeL] = useState(false);
+  const [helperL, setHelperL] = useState('');
+  const [changeU, setChangeU] = useState(false);
+  const [helperU, setHelperU] = useState('');
+  const [changeP, setChangeP] = useState(false);
+  const [helperP, setHelperP] = useState('');
+  const [btnSignUp, setBtnSignUp] = useState(true);
+
+  // localStorage.setItem('token', token);
 
 
   let storeData = {
@@ -58,8 +72,60 @@ export default function SignUp() {
     lastname: lastname,
   }
 
+  function BtnChange(){
+    if(username.length > 0 && lastname.length > 0 && password.length > 0 && firstname.length > 0){
+      setBtnSignUp(false);
+    }else{
+      setBtnSignUp(true);
+    }
+  }
+
+  function HandleChange(event, field){
+    if(field === "firstname"){
+      if(event.length > 0){
+        setChangeF(false);
+        setHelperF('');
+      }else{
+        setChangeF(true);
+        setHelperF('Firstname is Required');
+      }
+
+    }else if(field === "lastname"){
+      if(event.length > 0){
+        setChangeL(false);
+        setHelperL('');
+      }else{
+        setChangeL(true);
+        setHelperL('Lastname is Required');
+      }
+
+    }else if(field === "username"){
+      if(event.length > 0){
+        setChangeU(false);
+        setHelperU('');
+      }else{
+        setChangeU(true);
+        setHelperU('Firstname is Required');
+      }
+    }else if(field === "password"){
+      
+      if(event.length > 0){
+        setChangeP(false);
+        setHelperP(''); 
+      }else{
+        setChangeP(true);
+        setHelperP('Password is Required');
+      }
+    }
+  }
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" 
+    style={{
+      backgroundColor:'#ffffffeb',
+      paddingBottom:'15px', 
+      borderRadius: '5px'
+      }}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -80,9 +146,18 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                error={changeF}
+                helperText={helperF}
+                onBlur={(e)=>{
+                  HandleChange(e.target.value,"firstname")
+                  BtnChange();
+                }}
                 onChange= {(e)=>{
                   setFirstname(e.target.value);
+                  HandleChange(e.target.value,"firstname")
+                  BtnChange();
                 }}
+                
 
               />
             </Grid>
@@ -95,9 +170,18 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                error={changeL}
+                helperText={helperL}
+                onBlur={(e)=>{
+                  HandleChange(e.target.value,"lastname")
+                  BtnChange();
+                }}
                 onChange= {(e)=>{
                   setLastname(e.target.value);
+                  HandleChange(e.target.value,"lastname")
+                  BtnChange();
                 }}
+                
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,8 +193,16 @@ export default function SignUp() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                error={changeU}
+                helperText={helperU}
+                onBlur={(e)=>{
+                  HandleChange(e.target.value,"username")
+                  BtnChange();
+                }}
                 onChange= {(e)=>{
                   setUsername(e.target.value);
+                  HandleChange(e.target.value,"username")
+                  BtnChange();
                 }}
               />
             </Grid>
@@ -124,8 +216,16 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                error={changeP}
+                helperText={helperP}
+                onBlur={(e)=>{
+                  HandleChange(e.target.value,"password")
+                  BtnChange();
+                }}
                 onChange= {(e)=>{
                   setPassword(e.target.value);
+                  HandleChange(e.target.value,"password")
+                  BtnChange();
                 }}
               />
             </Grid>
@@ -141,6 +241,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={btnSignUp}
             onClick = {()=> {
               // console.log(storeData);
 
@@ -151,7 +252,7 @@ export default function SignUp() {
                 data: storeData
               }).then(function(response){
                 console.log(response.data.token)
-                setToken(response.data.token);
+               
               })
 
 

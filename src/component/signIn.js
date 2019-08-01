@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 function MadeWithLove() {
   return (
@@ -101,7 +102,7 @@ export default function SignInSide(name) {
     username: username,
     password: password
   }
-   console.log(name);
+  //  console.log(name);
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -168,6 +169,20 @@ export default function SignInSide(name) {
               className={classes.submit}
               onClick = {()=>{
                 console.log(userData);
+
+                axios({
+                  method: 'post',
+                  url: 'http://localhost:3001/api/login',
+                  json: true,
+                  data: userData
+                }).then(function(response){
+                  // console.log(response.data.token)
+                  localStorage.setItem('token', response.data.token);
+                  
+                })
+
+
+
               }}
 
 

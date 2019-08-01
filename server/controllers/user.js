@@ -75,6 +75,12 @@ function create(req, res) {
   }
 
 
+  function addContact(){
+    const db = req.app.get('db');
+    const { first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_or_province, postal_code, country } = req.body;
+  }
+
+
 module.exports = {
     create,
     login

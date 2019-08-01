@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /material-dashboard-react-master
+/package-lock.json
 
 # testing
 /coverage

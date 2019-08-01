@@ -169,7 +169,6 @@ export default function SignInSide(name) {
               className={classes.submit}
               onClick = {()=>{
                 console.log(userData);
-
                 axios({
                   method: 'post',
                   url: 'http://localhost:3001/api/login',
@@ -178,14 +177,10 @@ export default function SignInSide(name) {
                 }).then(function(response){
                   // console.log(response.data.token)
                   localStorage.setItem('token', response.data.token);
-                  
+                  localStorage.setItem('id',response.data.id)
+                  window.location.href='/#/address';
                 })
-
-
-
               }}
-
-
             >
               Sign In
             </Button>
@@ -202,7 +197,7 @@ export default function SignInSide(name) {
               </Grid>
             </Grid>
             <Box mt={5}>
-              <MadeWithLove />
+              <MadeWithLove /> 
             </Box>
           </form>
         </div>

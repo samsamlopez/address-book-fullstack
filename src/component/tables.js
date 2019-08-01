@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,6 +27,10 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+
+import DialogForm from './dialogForm';
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -41,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     // minWidth: 650,
-    minHeight: 500, 
+    // minHeight: 500, 
   },
   blue: {
     // background: 'rgb(9,9,121)',
@@ -66,6 +70,24 @@ const rows = [
 export default function AddressBook() {
 
   const classes = useStyles();
+
+  const [open, setOpen] =useState(false);
+
+  
+
+
+  function handleClickOpen() {
+    setOpen(true);
+  }
+  
+  function handleClose() {
+      setOpen(false);
+  }
+  
+
+
+
+
   return (
     <React.Fragment>
     <AppBar position="static" style={{
@@ -79,7 +101,10 @@ export default function AddressBook() {
           <Typography variant="h6" className={classes.title} style={{letterSpacing: '5px'}}>
             ADDRESS BOOK
           </Typography>
-          <IconButton className={classes.button}>
+          <IconButton className={classes.button} onClick={()=>{
+            localStorage.clear();
+            window.location.href= "/#/";
+          }}>
               {/* <LogoutIcon style={{float: 'right', color: 'white'}} fontSize="large"/> */}
               LOGOUT
           </IconButton>
@@ -135,8 +160,8 @@ export default function AddressBook() {
                 />
             </span> 
             <span style={{float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px'}}>
-                <Fab size="medium" style={{backgroundColor: '#fcb045'}} aria-label="add">
-                    <AddIcon style={{float: 'right', color: 'white'}}/>
+                <Fab size="medium" style={{backgroundColor: '#fcb045'}} aria-label="add" onClick={()=>{handleClickOpen()}} >
+                    <AddIcon style={{float: 'right', color: 'white'}} />
                 </Fab>
             </span>
           </div>
@@ -175,6 +200,14 @@ export default function AddressBook() {
         </Paper>
         </Grid>
     </Grid>
+
+
+    <DialogForm 
+      handleClose = {handleClose}
+      handleClickOpen = {handleClickOpen}
+      openDialog = {open}
+    />
+
     </React.Fragment>
   );
 }

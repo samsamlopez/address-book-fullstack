@@ -12,39 +12,31 @@ exports.up = (pgm) => {
         },
         last_name: {
             type: 'text',
-            notNull: true,
         },
         home_phone: {
             type: 'text',
-            notNull: true,
         },
         mobile_phone: {
             type: 'text',
-            notNull: true,
         },
         work_phone: {
             type: 'text',
-            notNull: true,
+
         },
         email: {
             type: 'text',
-            notNull: true,
         },
         city:{
             type: 'text',
-            notNull: true,
         },
         state_or_province: {
             type: 'text',
-            notNull: true,
         },
         postal_code: {
             type: 'integer',
-            notNull: true,
         },
         country:{
             type: 'text',
-            notNull: true,
         }
     })
 };

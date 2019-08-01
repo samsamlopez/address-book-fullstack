@@ -75,13 +75,54 @@ function create(req, res) {
   }
 
 
-  function addContact(){
+  function addContact(req, res){
     const db = req.app.get('db');
     const { first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_or_province, postal_code, country } = req.body;
+
+    const user_id= req.params.user;
+    
+    const temp = [];
+
+    db.contact
+    .insert(
+      {
+        first_name,
+        last_name,
+        home_phone,
+        mobile_phone,
+        work_phone,
+        email,
+        city,
+        state_or_province,
+        postal_code,
+        country,
+      }
+    )
+    .then(data=>{
+        temp.push(data);
+        let contact_id = data.id;
+        // console.log(userId,"-",contactId);
+        
+        db.address_book
+        .insert(
+          {
+            user_id,
+            contact_id,
+          }
+        ).then(add=>{
+          console.log(add)
+          temp.push(add)
+          res.status(201).json(temp)
+        })
+    })
+    // .catch(err => {
+    //   console.error(err);
+    // });
   }
 
 
 module.exports = {
     create,
-    login
+    login,
+    addContact
   };

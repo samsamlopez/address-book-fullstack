@@ -20,6 +20,7 @@ massive({
     
     app.post('/api/users', users.create);
     app.post('/api/login', users.login);
+    app.post('/api/addContact/:user', users.addContact)
   
     const PORT = 3001;
     app.listen(PORT, () => {

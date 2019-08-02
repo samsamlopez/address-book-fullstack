@@ -55,7 +55,7 @@ function create(req, res) {
         return argon2.verify(user.password, password).then(valid => {
           if (!valid) {
             throw new Error('Incorrect password');
-          }
+          } 
   
           const token = jwt.sign({ userId: user.id }, secret);
           delete user.password; // remove password hash from returned user object
@@ -79,7 +79,7 @@ function create(req, res) {
     const db = req.app.get('db');
     const { first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_or_province, postal_code, country } = req.body;
 
-    const user_id= req.params.user;
+    const user_id = req.params.user;
     
     const temp = [];
 
@@ -120,9 +120,96 @@ function create(req, res) {
     // });
   }
 
+  function getContact(req, res){
+    const db = req.app.get('db');
+    const userID = req.query.id;
+    console.log(req.query.id)
+    db
+    .query(
+      'Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${id} ',
+      {
+        id:req.query.id
+      }
+    )
+    .then(data=>{
+      res.status(200).json(data)
+    })
+  }
+
+  function updateContact(req, res){
+    const db = req.app.get('db');
+
+    const {
+      first_name,
+      last_name,
+      home_phone,
+      mobile_phone,
+      work_phone,
+      email,
+      city,
+      state_or_province,
+      postal_code,
+      country
+    } = req.body;
+
+    db.contact
+    .update(
+      {
+        id: req.query.cid
+      },
+      {
+        first_name,
+        last_name,
+        home_phone,
+        mobile_phone,
+        work_phone,
+        email,
+        city,
+        state_or_province,
+        postal_code,
+        country
+      }
+    )
+    .then(data =>{
+      res.status(201).json(data)
+    })
+    .catch(err => {
+      console.error(err);
+    })
+  }
+
+  function deleteContact(req,res){
+    const db = req.app.get('db');
+    let deleted = [];
+    console.log(req.query.cid);
+    db
+    .query(
+      'DELETE FROM address_book WHERE contact_id=${id}',
+      {
+        id:req.query.cid
+      }
+    )
+    .then(data=>{
+      deleted.push(data);
+      db
+      .query(
+        'DELETE FROM contact WHERE id=${id}',
+        {
+          id:req.query.cid
+        }
+      )
+      .then(data2=>{
+        deleted.push(data2)
+        res.status(200).json(deleted)
+      })
+    })
+  }
 
 module.exports = {
     create,
     login,
-    addContact
+    addContact,
+    getContact,
+    updateContact,
+    deleteContact
   };

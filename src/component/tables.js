@@ -26,9 +26,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import ViewIcon from '@material-ui/icons/Visibility';
+import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
 import DialogForm from './dialogForm';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -54,27 +57,47 @@ const useStyles = makeStyles(theme => ({
   appBar: { 
   }
 }));
-function createData(name, calories, fat, carbs) {
-  return { name, calories, fat, carbs };
-}
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+// function createData(name, calories, fat, carbs) {
+//   return { name, calories, fat, carbs };
+// }
+// const rows = [
+//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+//   createData('Eclair', 262, 16.0, 24, 6.0),
+//   createData('Cupcake', 305, 3.7, 67, 4.3),
+//   createData('Gingerbread', 356, 16.0, 49, 3.9),
+// ];
 // function ListItemLink(props) {
 //   return <ListItem button component="a" {...props} />;
 // }
 export default function AddressBook() {
 
+
+  const token = localStorage.getItem('token');
+  var decoded = jwtDecode(token);
+  const logged_userID = decoded.userId;
+  // console.log(logged_userID);
+  
+
+
   const classes = useStyles();
 
   const [open, setOpen] =useState(false);
+  const [stopper, setStopper] = useState(true);
+  const [contactData, setContactData] = useState([])
 
+  if(stopper){
+    axios({
+      method: 'get',
+      url: ` http://localhost:3001/api/getContact?id=${logged_userID}`,
+    }).then(function(response){
+      // console.log(...response.data)
+      setContactData([...response.data])
+      setStopper(false);
+    })
+  }
   
-
+  console.log(contactData);
 
   function handleClickOpen() {
     setOpen(true);
@@ -104,8 +127,10 @@ export default function AddressBook() {
           <IconButton className={classes.button} onClick={()=>{
             localStorage.clear();
             window.location.href= "/#/";
-          }}>
-              {/* <LogoutIcon style={{float: 'right', color: 'white'}} fontSize="large"/> */}
+            
+          }}
+            style={{color:'white'}}
+          >
               LOGOUT
           </IconButton>
         </Toolbar>
@@ -175,22 +200,22 @@ export default function AddressBook() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map(row => (
-                <TableRow key={row.name}>
+              {contactData.map(row => (
+                <TableRow key={row.id}>
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.first_name}
                   </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
+                  <TableCell align="right">{row.last_name}</TableCell>
+                  <TableCell align="right">{row.mobile_phone}</TableCell>
                   <TableCell align="right">
-                      <Fab size="small" style={{backgroundColor: '#833ab4', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
-                        <EditIcon />
+                      <Fab size="small" style={{backgroundColor: '#42a5f5', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
+                        <ViewIcon />
                       </Fab>
-                      <Fab size="small" style={{backgroundColor: '#fd1d1d', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
+                      <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
+                      <EditIcon />
+                      </Fab>
+                      <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin}>
                         <DeleteIcon />
-                      </Fab>
-                      <Fab size="small" style={{backgroundColor: '#fcb045', color: 'white'}} aria-label="add" className={classes.margin}>
-                        <GroupAddIcon />
                       </Fab>
                   </TableCell>
                 </TableRow>
@@ -200,12 +225,11 @@ export default function AddressBook() {
         </Paper>
         </Grid>
     </Grid>
-
-
-    <DialogForm 
+    <DialogForm
       handleClose = {handleClose}
       handleClickOpen = {handleClickOpen}
       openDialog = {open}
+      userID = {logged_userID}
     />
 
     </React.Fragment>

@@ -5,13 +5,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
 
 export default function DialogForm({
     handleClose,
     handleClickOpen,
-    openDialog
+    openDialog,
+    userID
 }){
     // console.log(openDialog)
+    // console.log(userID);
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [homePhone, setHomePhone] = useState('');
@@ -192,7 +195,7 @@ export default function DialogForm({
         margin="normal"
         variant="outlined"
         onChange={(event)=>{
-            setCountry(event.target.value)
+            setCountry(event.target.value);
         }}
         />
 
@@ -202,8 +205,18 @@ export default function DialogForm({
           Cancel
         </Button>
         <Button onClick={()=>{
-            console.log(postData)
+            console.log(userID);
+            console.log(postData);
             handleClose();
+
+            axios({
+              method: 'post',
+              url: `http://localhost:3001/api/addContact/${userID}`,
+              json: true,
+              data: postData
+            }).then(function(response){
+              // console.log(response.data.token)
+            })
         }} color="primary">
           ADD
         </Button>

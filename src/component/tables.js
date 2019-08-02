@@ -100,9 +100,6 @@ export default function AddressBook() {
       setStopper(false);
     })
   }
-  
-  console.log(contactData);
-
   function resetStopper(){
     setStopper(true);
   }
@@ -199,7 +196,7 @@ export default function AddressBook() {
                 />
             </span> 
             <span style={{float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px'}}>
-                <Fab size="medium" style={{backgroundColor: '#fcb045'}} aria-label="add" onClick={()=>{handleClickOpen()}} >
+                <Fab size="medium" style={{backgroundColor: '#42a5f5'}} aria-label="add" onClick={()=>{handleClickOpen()}} >
                     <AddIcon style={{float: 'right', color: 'white'}} />
                 </Fab>
             </span>
@@ -222,9 +219,9 @@ export default function AddressBook() {
                   <TableCell align="right">{row.last_name}</TableCell>
                   <TableCell align="right">{row.mobile_phone}</TableCell>
                   <TableCell align="right">
-                      <Fab size="small" style={{backgroundColor: '#42a5f5', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
+                      {/* <Fab size="small" style={{backgroundColor: '#42a5f5', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
                         <ViewIcon />
-                      </Fab>
+                      </Fab> */}
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
                         HandleOpenEdit()
                         setEditData(row);
@@ -233,7 +230,17 @@ export default function AddressBook() {
                         }}>
                       <EditIcon />
                       </Fab>
-                      <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin}>
+                      <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
+
+                        axios({
+                          method: 'delete',
+                          url: `  http://localhost:3001/api/delete?cid=${row.id}`,
+                        }).then(function(response){
+                          
+                        // console.log(response.data.token)
+                        })
+                        resetStopper()
+                      }} >
                         <DeleteIcon />
                       </Fab>
                   </TableCell>

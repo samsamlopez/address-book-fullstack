@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 
 function MadeWithLove() {
   return (
@@ -105,6 +108,7 @@ export default function SignInSide(name) {
   //  console.log(name);
   return (
     <Grid container component="main" className={classes.root}>
+    <ToastContainer enableMultiContainer/>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -168,7 +172,7 @@ export default function SignInSide(name) {
               color="primary"
               className={classes.submit}
               onClick = {()=>{
-                console.log(userData);
+                // console.log(userData);
                 axios({
                   method: 'post',
                   url: 'http://localhost:3001/api/login',
@@ -179,6 +183,11 @@ export default function SignInSide(name) {
                   localStorage.setItem('token', response.data.token);
                   localStorage.setItem('id',response.data.id)
                   window.location.href='/#/address';
+                }).catch(function(response){
+                  toast.error("Invalid Username or Password",{
+                    position:toast.POSITION.TOP_LEFT,
+                    autoClose:3696
+                  })
                 })
               }}
             >

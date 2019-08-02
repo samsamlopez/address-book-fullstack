@@ -8,42 +8,30 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 
 export default function DialogForm({
-    handleClose,
-    handleClickOpen,
-    openDialog,
-    userID,
+    closeEdit,
+    dialogOpen,
+    editData,
+    cid,
     reset
 }){
-    // console.log(openDialog)
-    // console.log(userID);
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [homePhone, setHomePhone] = useState('');
-    const [mobilePhone, setMobilePhone] = useState('');
-    const [workPhone, setWorkPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [city, setCity] = useState('');
-    const [stateProvince, setStateProvince] = useState('');
-    const [postal, setPostal] = useState('');
-    const [country, setCountry] = useState('');
 
-  const postData = {
-    first_name: firstname,
-    last_name: lastname,
-    home_phone: homePhone,
-    mobile_phone: mobilePhone,
-    work_phone: workPhone,
-    email: email,
-    city: city,
-    state_or_province: stateProvince,
-    postal_code: postal,
-    country: country
-  };
-
+    var postData = {
+        first_name: editData.first_name,
+        last_name: editData.last_name,
+        home_phone: editData.home_phone,
+        mobile_phone: editData.mobile_phone,
+        work_phone: editData.work_phone,
+        email: editData.email,
+        city: editData.city,
+        state_or_province: editData.state_or_province,
+        postal_code: editData.postal_code,
+        country: editData.country
+    }
+ 
     return (
     <React.Fragment>
-    <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Add Contact</DialogTitle>
+    <Dialog open={dialogOpen} onClose={closeEdit} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">View or Edit Details</DialogTitle>
 
       <DialogContent style={{
         display: "flex",
@@ -57,8 +45,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setFirstname(event.target.value)
+        defaultValue={editData.first_name}
+        onChange = {(event)=>{
+            postData.first_name = event.target.value;
         }}
         />
         <TextField
@@ -68,8 +57,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setLastname(event.target.value)
+        defaultValue={editData.last_name}
+        onChange = {(event)=>{
+            postData.last_name = event.target.value;
         }}
         />
 
@@ -87,8 +77,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setHomePhone(event.target.value)
+        defaultValue={editData.home_phone}
+        onChange = {(event)=>{
+            postData.home_phone = event.target.value;
         }}
         />
         <TextField
@@ -98,8 +89,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setMobilePhone(event.target.value)
+        defaultValue={editData.mobile_phone}
+        onChange = {(event)=>{
+            postData.mobile_phone = event.target.value;
         }}
         />
 
@@ -116,8 +108,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setWorkPhone(event.target.value)
+        defaultValue={editData.work_phone}
+        onChange = {(event)=>{
+            postData.work_phone = event.target.value;
         }}
         />
 
@@ -135,8 +128,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setEmail(event.target.value)
+        defaultValue={editData.email}
+        onChange = {(event)=>{
+            postData.email = event.target.value;
         }}
         />
 
@@ -154,8 +148,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setCity(event.target.value)
+        defaultValue={editData.city}
+        onChange = {(event)=>{
+        postData.city = event.target.value;
         }}
         />
         <TextField
@@ -165,8 +160,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setStateProvince(event.target.value)
+        defaultValue={editData.state_or_province}
+        onChange = {(event)=>{
+            postData.state_or_province = event.target.value;
         }}
         />
 
@@ -184,8 +180,9 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setPostal(event.target.value)
+        defaultValue={editData.postal_code}
+        onChange = {(event)=>{
+            postData.postal_code = event.target.value;
         }}
         />
         <TextField
@@ -195,32 +192,34 @@ export default function DialogForm({
         type="search"
         margin="normal"
         variant="outlined"
-        onChange={(event)=>{
-            setCountry(event.target.value);
+        defaultValue={editData.country}
+        onChange = {(event)=>{
+            postData.country = event.target.value;
         }}
         />
 
       </DialogContent>
       <DialogActions style={{margin: "auto"}}>
-        <Button onClick={handleClose} color="primary">
-          Cancel
+        <Button onClick={closeEdit} color="primary">
+          Close
         </Button>
         <Button onClick={()=>{
-            console.log(userID);
             console.log(postData);
-            handleClose();
+            console.log(cid)
+            closeEdit();
 
             axios({
-              method: 'post',
-              url: `http://localhost:3001/api/addContact/${userID}`,
-              json: true,
-              data: postData
+                method: 'patch',
+                url: ` http://localhost:3001/api/update?cid=${cid}`,
+                json: true,
+                data: postData
             }).then(function(response){
-              // console.log(response.data.token)
+            // console.log(response.data.token)
             })
             reset()
+            //action
         }} color="primary">
-          ADD
+          Save
         </Button>
       </DialogActions>
     </Dialog>

@@ -31,6 +31,7 @@ import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
 import DialogForm from './dialogForm';
+import DialogEdit from './dialogEdit';
 
 
 
@@ -84,7 +85,10 @@ export default function AddressBook() {
 
   const [open, setOpen] =useState(false);
   const [stopper, setStopper] = useState(true);
-  const [contactData, setContactData] = useState([])
+  const [contactData, setContactData] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editData, setEditData ] = useState([]);
+  const [editCid, setEditCid] = useState(0);
 
   if(stopper){
     axios({
@@ -99,6 +103,10 @@ export default function AddressBook() {
   
   console.log(contactData);
 
+  function resetStopper(){
+    setStopper(true);
+  }
+
   function handleClickOpen() {
     setOpen(true);
   }
@@ -106,10 +114,16 @@ export default function AddressBook() {
   function handleClose() {
       setOpen(false);
   }
+
+  function HandleOpenEdit() {
+    setOpenEdit(true);
+    
+  }
   
-
-
-
+  function HandleCloseEdit() {
+    setOpenEdit(false);
+  }
+  
 
   return (
     <React.Fragment>
@@ -211,7 +225,12 @@ export default function AddressBook() {
                       <Fab size="small" style={{backgroundColor: '#42a5f5', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
                         <ViewIcon />
                       </Fab>
-                      <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
+                      <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
+                        HandleOpenEdit()
+                        setEditData(row);
+                        setEditCid(row.id)
+                        // console.log(row.id);
+                        }}>
                       <EditIcon />
                       </Fab>
                       <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin}>
@@ -230,6 +249,15 @@ export default function AddressBook() {
       handleClickOpen = {handleClickOpen}
       openDialog = {open}
       userID = {logged_userID}
+      reset = {resetStopper}
+    />
+
+    <DialogEdit 
+      closeEdit = {HandleCloseEdit}
+      dialogOpen = {openEdit}
+      editData = {editData}
+      cid = {editCid}
+      reset = {resetStopper}
     />
 
     </React.Fragment>

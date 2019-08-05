@@ -205,11 +205,26 @@ function create(req, res) {
     })
   }
 
+  function getUserDetails(req, res){
+    const db = req.app.get('db');
+    
+    const id = req.params.id
+    console.log(id)
+    db.users
+    .findOne(
+      {id}
+      )
+    .then(data => {
+      res.status(200).json(data)
+    })
+  }
+
 module.exports = {
     create,
     login,
     addContact,
     getContact,
     updateContact,
-    deleteContact
+    deleteContact,
+    getUserDetails
   };

@@ -43,7 +43,7 @@ export default function DialogForm({
     return (
     <React.Fragment>
     <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Add Contact</DialogTitle>
+      <DialogTitle id="form-dialog-title" style={{backgroundColor: '#42a5f5', color:'white'}}>ADD CONTACT</DialogTitle>
 
       <DialogContent style={{
         display: "flex",

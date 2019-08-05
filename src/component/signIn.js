@@ -181,7 +181,8 @@ export default function SignInSide(name) {
                 }).then(function(response){
                   // console.log(response.data.token)
                   localStorage.setItem('token', response.data.token);
-                  // localStorage.setItem('id',response.data.id)
+                  localStorage.setItem('firstname',response.data.firstname)
+                  localStorage.setItem('lastname',response.data.lastname)
                   window.location.href='/#/address';
                 }).catch(function(response){
                   toast.error("Invalid Username or Password",{

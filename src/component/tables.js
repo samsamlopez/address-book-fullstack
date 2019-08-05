@@ -32,7 +32,7 @@ import axios from 'axios';
 
 import DialogForm from './dialogForm';
 import DialogEdit from './dialogEdit';
-
+import DialogDelete from './dialogDelete';
 
 
 const useStyles = makeStyles(theme => ({
@@ -63,6 +63,8 @@ export default function AddressBook() {
 
 
   const token = localStorage.getItem('token');
+  const firstname = localStorage.getItem('firstname');
+  const lastname = localStorage.getItem('lastname');
   if(!token){
     window.location.href='/#/';
   }
@@ -70,11 +72,6 @@ export default function AddressBook() {
 
   var decoded = jwtDecode(token);
   const logged_userID = decoded.userId;
-
-  
-  
-  
-
   const classes = useStyles();
 
   const [open, setOpen] =useState(false);
@@ -84,6 +81,9 @@ export default function AddressBook() {
   const [editData, setEditData ] = useState([]);
   const [editCid, setEditCid] = useState(0);
   const [search, setSearch] = useState('');
+
+  const [alertDelete, setAlertDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(0);
   /*
   REMINDER:
     search
@@ -95,19 +95,13 @@ export default function AddressBook() {
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
     let lname = data.last_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
     if(fname){
-      return fname
+      return fname;
     }else{
-      return lname
+      return lname;
     }
   });
 
-  // console.log(filteredData);
-  // console.log(search);
-  // console.log(contactData);
-  // console.log(filteredData);
-  //  console.log(mixfilteredData)
-
-
+ 
   if(stopper){
     axios({
       method: 'get',
@@ -119,6 +113,7 @@ export default function AddressBook() {
     })
   }
 
+  
   
   function resetStopper(){
     setStopper(true);
@@ -139,6 +134,10 @@ export default function AddressBook() {
   
   function HandleCloseEdit() {
     setOpenEdit(false);
+  }
+
+  function ToggleDelete(){
+    setAlertDelete(false);
   }
   
 
@@ -166,9 +165,11 @@ export default function AddressBook() {
           </IconButton>
         </Toolbar>
     </AppBar>
-    <Grid container spacing={5} style={{padding: '50px'}}>
-        <Grid item xs={12} md={3}>
-        <Paper className={classes.root} style={{padding: '10px'}}>
+    
+    <Grid container  style={{padding: '50px'}}>
+        <Grid item xs={12} md={12}>
+          <h2>Welcome {lastname.toLocaleUpperCase()}, {firstname.toLocaleUpperCase()}!</h2>
+        {/* <Paper className={classes.root} style={{padding: '10px'}}>
           <Typography style={{padding: '10px', letterSpacing: '5px'}}>
             GROUPS
           </Typography>
@@ -202,9 +203,9 @@ export default function AddressBook() {
                   </ListItemSecondaryAction>
                 </ListItem>
               </List>
-        </Paper>
+        </Paper> */}
         </Grid>
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={12}>
         <Paper className={classes.root}>
           <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <span style={{float: 'left', marginLeft: '15px', marginTop: '15px', marginBottom: '10px'}}>
@@ -254,15 +255,16 @@ export default function AddressBook() {
                       <EditIcon />
                       </Fab>
                       <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
-
-                        axios({
-                          method: 'delete',
-                          url: `  http://localhost:3001/api/delete?cid=${row.id}`,
-                        }).then(function(response){
+                        setAlertDelete(true);
+                        setDeleteId(row.id);
+                        // axios({
+                        //   method: 'delete',
+                        //   url: `  http://localhost:3001/api/delete?cid=${row.id}`,
+                        // }).then(function(response){
                           
-                        // console.log(response.data.token)
-                        })
-                        resetStopper()
+                        // // console.log(response.data.token)
+                        // })
+                        // resetStopper()
                       }} >
                         <DeleteIcon />
                       </Fab>
@@ -288,6 +290,13 @@ export default function AddressBook() {
       editData = {editData}
       cid = {editCid}
       reset = {resetStopper}
+    />
+
+    <DialogDelete
+      dialogOpen = {alertDelete}
+      toggleClose = {ToggleDelete}
+      reset = {resetStopper}
+      deleteId = {deleteId}
     />
 
     </React.Fragment>

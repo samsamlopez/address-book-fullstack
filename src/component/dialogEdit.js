@@ -31,7 +31,7 @@ export default function DialogForm({
     return (
     <React.Fragment>
     <Dialog open={dialogOpen} onClose={closeEdit} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">View or Edit Details</DialogTitle>
+      <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>View or Edit Details</DialogTitle>
 
       <DialogContent style={{
         display: "flex",
@@ -100,7 +100,6 @@ export default function DialogForm({
         display: "flex",
         justifyContent: "space-between"
       }}>
-        
         <TextField
         style={{width:"100%"}}
         id="outlined-search"
@@ -113,7 +112,6 @@ export default function DialogForm({
             postData.work_phone = event.target.value;
         }}
         />
-
       </DialogContent>
 
       <DialogContent style={{

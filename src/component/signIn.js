@@ -127,7 +127,6 @@ export default function SignInSide(name) {
               fullWidth
               id="email"
               label="Username"
-              name="username"
               autoComplete="username"
               autoFocus 
               error={errorUser}
@@ -145,7 +144,6 @@ export default function SignInSide(name) {
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"
@@ -165,14 +163,16 @@ export default function SignInSide(name) {
               label="Remember me"
             />
             <Button
-              // type="submit"
+              type="submit"
+
               disabled= {btnSignIn}
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick = {()=>{
+              onClick = {(e)=>{
                 // console.log(userData);
+                e.preventDefault();
                 axios({
                   method: 'post',
                   url: 'http://localhost:3001/api/login',
@@ -181,7 +181,7 @@ export default function SignInSide(name) {
                 }).then(function(response){
                   // console.log(response.data.token)
                   localStorage.setItem('token', response.data.token);
-                  localStorage.setItem('id',response.data.id)
+                  // localStorage.setItem('id',response.data.id)
                   window.location.href='/#/address';
                 }).catch(function(response){
                   toast.error("Invalid Username or Password",{
@@ -189,6 +189,7 @@ export default function SignInSide(name) {
                     autoClose:3696
                   })
                 })
+
               }}
             >
               Sign In

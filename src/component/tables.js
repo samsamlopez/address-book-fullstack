@@ -58,28 +58,22 @@ const useStyles = makeStyles(theme => ({
   appBar: { 
   }
 }));
-// function createData(name, calories, fat, carbs) {
-//   return { name, calories, fat, carbs };
-// }
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
-// function ListItemLink(props) {
-//   return <ListItem button component="a" {...props} />;
-// }
+
 export default function AddressBook() {
 
 
   const token = localStorage.getItem('token');
-  var decoded = jwtDecode(token);
-  const logged_userID = decoded.userId;
-  // console.log(logged_userID);
+  if(!token){
+    window.location.href='/#/';
+  }
   
 
+  var decoded = jwtDecode(token);
+  const logged_userID = decoded.userId;
+
+  
+  
+  
 
   const classes = useStyles();
 
@@ -89,6 +83,30 @@ export default function AddressBook() {
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData ] = useState([]);
   const [editCid, setEditCid] = useState(0);
+  const [search, setSearch] = useState('');
+  /*
+  REMINDER:
+    search
+    notification for signup
+    redirect for signup
+    Groups
+  */
+  const filteredData = contactData.filter((data)=>{
+    let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+    let lname = data.last_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+    if(fname){
+      return fname
+    }else{
+      return lname
+    }
+  });
+
+  // console.log(filteredData);
+  // console.log(search);
+  // console.log(contactData);
+  // console.log(filteredData);
+  //  console.log(mixfilteredData)
+
 
   if(stopper){
     axios({
@@ -100,6 +118,8 @@ export default function AddressBook() {
       setStopper(false);
     })
   }
+
+  
   function resetStopper(){
     setStopper(true);
   }
@@ -193,6 +213,9 @@ export default function AddressBook() {
                 id="standard-search"
                 label="Search field"
                 type="search"
+                onChange={(event)=>{
+                  setSearch(event.target.value);
+                }}
                 />
             </span> 
             <span style={{float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px'}}>
@@ -211,7 +234,7 @@ export default function AddressBook() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {contactData.map(row => (
+              {filteredData.map(row => (
                 <TableRow key={row.id}>
                   <TableCell component="th" scope="row">
                     {row.first_name}

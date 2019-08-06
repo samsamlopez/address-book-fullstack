@@ -6,33 +6,30 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import Divider from '@material-ui/core/Divider';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import GroupIcon from '@material-ui/icons/Group';
+import SoloIcon from '@material-ui/icons/Person';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
+import LogoutIcon from '@material-ui/icons/ExitToApp';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@material-ui/icons/PersonAdd';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import EditIcon from '@material-ui/icons/Edit';
-import ViewIcon from '@material-ui/icons/Visibility';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
+
 
 import DialogForm from './dialogForm';
 import DialogEdit from './dialogEdit';
 import DialogDelete from './dialogDelete';
+import DialogAddGroup from './dialogAddGroup';
 
 
 const useStyles = makeStyles(theme => ({
@@ -76,6 +73,7 @@ export default function AddressBook() {
 
   const [open, setOpen] =useState(false);
   const [stopper, setStopper] = useState(true);
+ 
   const [contactData, setContactData] = useState([]);
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData ] = useState([]);
@@ -84,13 +82,15 @@ export default function AddressBook() {
 
   const [alertDelete, setAlertDelete] = useState(false);
   const [deleteId, setDeleteId] = useState(0);
-  /*
-  REMINDER:
-    search
-    notification for signup
-    redirect for signup
-    Groups
-  */
+
+  const [groupToggle, setGroupToggle] = useState(true);
+  const [gridSize, setGridSize] = useState(12);
+  const [dialogGroup, setDialogGroup] = useState(false);
+
+
+  const [stopperG, setStopperG] = useState(true);
+  const [groupData, setGroupData] = useState([]);
+
   const filteredData = contactData.filter((data)=>{
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
     let lname = data.last_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -101,7 +101,7 @@ export default function AddressBook() {
     }
   });
 
- 
+
   if(stopper){
     axios({
       method: 'get',
@@ -113,6 +113,22 @@ export default function AddressBook() {
     })
   }
 
+  if(stopperG){
+    axios({
+      method: 'get',
+      url: `http://localhost:3001/api/getGroups?id=${logged_userID}`,
+    }).then(function(response){
+      // console.log(...response.data)
+      setStopperG(false);
+      setGroupData([...response.data])
+      
+    })
+    
+  }
+
+  // http://localhost:3001/api/getGroups?id=1
+
+  
   
   
   function resetStopper(){
@@ -139,13 +155,11 @@ export default function AddressBook() {
   function ToggleDelete(){
     setAlertDelete(false);
   }
-  
 
   return (
     <React.Fragment>
     <AppBar position="static" style={{
         backgroundColor: '#a43cbd'
-        // background: 'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)'
     }}>
         <Toolbar>
           <Icon className={classes.menuButton}  color="disabled" fontSize="large">
@@ -161,53 +175,25 @@ export default function AddressBook() {
           }}
             style={{color:'white'}}
           >
-              LOGOUT
+          <LogoutIcon /> 
+            
           </IconButton>
         </Toolbar>
     </AppBar>
     
     <Grid container  style={{padding: '50px'}}>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={12} style={{display:'flex', justifyContent: 'center'}}>
           <h2>Welcome {lastname.toLocaleUpperCase()}, {firstname.toLocaleUpperCase()}!</h2>
-        {/* <Paper className={classes.root} style={{padding: '10px'}}>
-          <Typography style={{padding: '10px', letterSpacing: '5px'}}>
-            GROUPS
-          </Typography>
-          <Divider/>
-            <List component="nav" aria-label="main mailbox folders">
-                <ListItem button>
-                <ListItemAvatar>
-                    <Avatar style={{background: '#833ab4'}}>
-                      <GroupIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary="Sample Group 1" />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <Divider />
-                <ListItem button>
-                  <ListItemAvatar>
-                    <Avatar style={{background: '#833ab4'}}>
-                      <GroupIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary="Sample Group 2" />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-        </Paper> */}
+      
         </Grid>
-        <Grid item xs={12} md={12}>
+        {groupToggle? null :  <Grid item xs={3} md={3}></Grid> }
+
+
+        <Grid item xs={gridSize} md={gridSize}>
         <Paper className={classes.root}>
-          <div style={{display: 'flex', justifyContent: 'space-between'}}>
+
+
+          {groupToggle?<div style={{display: 'flex', justifyContent: 'space-between'}}>
             <span style={{float: 'left', marginLeft: '15px', marginTop: '15px', marginBottom: '10px'}}>
               <SearchIcon style={{marginTop: '21px', marginRight: '7px', color: 'gray'}} />
               <TextField
@@ -220,12 +206,62 @@ export default function AddressBook() {
                 />
             </span> 
             <span style={{float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px'}}>
-                <Fab size="medium" style={{backgroundColor: '#42a5f5'}} aria-label="add" onClick={()=>{handleClickOpen()}} >
+                <Fab size="medium" style={{backgroundColor: '#42a5f5', marginRight:'8px'}} aria-label="add" onClick={()=>{handleClickOpen()}} >
                     <AddIcon style={{float: 'right', color: 'white'}} />
+                </Fab>
+                <Fab size="medium" style={{backgroundColor: '#fb8c00'}} aria-label="Group" 
+                onClick={()=>{
+                  setGroupToggle(!groupToggle);
+                  if(gridSize === 6){
+                    setGridSize(12)
+                  }else{
+                    setGridSize(6)
+                  }
+                  
+                }} >
+                    <SoloIcon style={{float: 'right', color: 'white'}} />
                 </Fab>
             </span>
           </div>
-          <Table className={classes.table}>
+          : 
+          <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <span style={{float: 'left', marginLeft: '15px', marginTop: '15px', marginBottom: '10px'}}>
+            <SearchIcon style={{marginTop: '21px', marginRight: '7px', color: 'gray'}} />
+            <TextField
+              id="standard-search"
+              label="Search field"
+              type="search"
+              onChange={(event)=>{
+                // setSearch(event.target.value);
+              }}
+              />
+          </span> 
+          <span style={{float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px'}}>
+              <Fab size="medium" style={{backgroundColor: '#42a5f5', marginRight:'8px'}} aria-label="add" 
+              onClick={()=>{
+                setDialogGroup(true);
+              }
+              } >
+                  <GroupAddIcon style={{float: 'right', color: 'white'}} />
+              </Fab>
+              <Fab size="medium" style={{backgroundColor: '#fb8c00'}} aria-label="Group" 
+              onClick={()=>{
+                setGroupToggle(!groupToggle);
+                if(gridSize === 6){
+                  setGridSize(12)
+                }else{
+                  setGridSize(6)
+                }
+                
+              }} >
+                  <GroupIcon style={{float: 'right', color: 'white'}} />
+              </Fab>
+          </span>
+          </div>
+          }
+
+
+          {groupToggle?<Table className={classes.table}>
             <TableHead> 
               <TableRow>
                 <TableCell>FIRST NAME</TableCell>
@@ -250,21 +286,13 @@ export default function AddressBook() {
                         HandleOpenEdit()
                         setEditData(row);
                         setEditCid(row.id)
-                        // console.log(row.id);
                         }}>
                       <EditIcon />
                       </Fab>
                       <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
                         setAlertDelete(true);
                         setDeleteId(row.id);
-                        // axios({
-                        //   method: 'delete',
-                        //   url: `  http://localhost:3001/api/delete?cid=${row.id}`,
-                        // }).then(function(response){
-                          
-                        // // console.log(response.data.token)
-                        // })
-                        // resetStopper()
+                        
                       }} >
                         <DeleteIcon />
                       </Fab>
@@ -273,6 +301,48 @@ export default function AddressBook() {
               ))}
             </TableBody>
           </Table>
+          :
+          <Table className={classes.table}>
+            <TableHead> 
+              <TableRow>
+                <TableCell align="center">
+                  Group NAME
+                  </TableCell>
+
+                <TableCell align="center">ACTION </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {groupData.map(row => (
+                <TableRow key={row.id}>
+                  <TableCell component="th" scope="row" align="left">
+                  <Fab size="medium" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
+                    onClick={()=>{
+                      
+                      
+                    }} >
+                        <GroupIcon style={{float: 'right', color: 'white'}} />
+                    </Fab>
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="center">
+                      <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
+                      }}>
+                      <EditIcon />
+                      </Fab>
+                      <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
+                        
+                      }} >
+                        <DeleteIcon />
+                      </Fab>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          }
+
+
         </Paper>
         </Grid>
     </Grid>
@@ -297,6 +367,15 @@ export default function AddressBook() {
       toggleClose = {ToggleDelete}
       reset = {resetStopper}
       deleteId = {deleteId}
+    />
+
+    <DialogAddGroup
+      dialogOpen = {dialogGroup}
+      toggleClose = {function(){
+        setDialogGroup(!dialogGroup)
+      }}
+      
+      user_id = {logged_userID}
     />
 
     </React.Fragment>

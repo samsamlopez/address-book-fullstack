@@ -29,6 +29,10 @@ massive({
     
     app.post('/api/addGroup',groups.create);
     app.get('/api/getGroups',groups.fetch);
+    app.post('/api/addMember',groups.assign);
+    app.get('/api/viewMember',groups.viewMember);
+    app.patch('/api/updateName/:id', groups.editName);
+    app.delete('/api/deleteGroup', groups.deleteGroup)
   
     const PORT = 3001;
     app.listen(PORT, () => {

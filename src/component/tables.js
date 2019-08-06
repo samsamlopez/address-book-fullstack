@@ -20,8 +20,11 @@ import LogoutIcon from '@material-ui/icons/ExitToApp';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/PersonAdd';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import AddtoGroup from '@material-ui/icons/GroupAdd';
+import GroupAddIcon from '@material-ui/icons/LibraryAdd';
 import EditIcon from '@material-ui/icons/Edit';
+import ViewIcon from '@material-ui/icons/Visibility';
+
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
@@ -325,14 +328,14 @@ export default function AddressBook() {
                       
                       
                     }} >
-                        <GroupIcon style={{float: 'right', color: 'white'}} />
+                        <ViewIcon style={{float: 'right', color: 'white'}} />
                     </Fab>
                     {row.name}
                   </TableCell>
                   <TableCell align="center">
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
                       }}>
-                      <EditIcon />
+                      <AddtoGroup />
                       </Fab>
                       <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
                         

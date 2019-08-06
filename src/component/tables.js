@@ -90,6 +90,7 @@ export default function AddressBook() {
 
   const [stopperG, setStopperG] = useState(true);
   const [groupData, setGroupData] = useState([]);
+  const [searchGroup, setSearchGroup]= useState('');
 
   const filteredData = contactData.filter((data)=>{
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -99,6 +100,11 @@ export default function AddressBook() {
     }else{
       return lname;
     }
+  });
+  const filteredGroups = groupData.filter((data)=>{
+    return data.name.toLowerCase().indexOf(searchGroup.toLowerCase()) !== -1;
+    
+    
   });
 
 
@@ -233,6 +239,7 @@ export default function AddressBook() {
               type="search"
               onChange={(event)=>{
                 // setSearch(event.target.value);
+                setSearchGroup(event.target.value);
               }}
               />
           </span> 
@@ -279,9 +286,6 @@ export default function AddressBook() {
                   <TableCell align="right">{row.last_name}</TableCell>
                   <TableCell align="right">{row.mobile_phone}</TableCell>
                   <TableCell align="right">
-                      {/* <Fab size="small" style={{backgroundColor: '#42a5f5', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}>
-                        <ViewIcon />
-                      </Fab> */}
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
                         HandleOpenEdit()
                         setEditData(row);
@@ -313,7 +317,7 @@ export default function AddressBook() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {groupData.map(row => (
+              {filteredGroups.map(row => (
                 <TableRow key={row.id}>
                   <TableCell component="th" scope="row" align="left">
                   <Fab size="medium" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 

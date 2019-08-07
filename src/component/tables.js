@@ -103,6 +103,8 @@ export default function AddressBook() {
   const [dialogDelete,setDialogDelete] = useState(false); 
   const [groupMemberData, setGroupMemberData] = useState([])
   const [selectedGroup,setSelectedGroup] = useState([]);
+  const [viewMember,setViewMember] = useState([]);
+
 
   const filteredData = contactData.filter((data)=>{
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -138,8 +140,7 @@ export default function AddressBook() {
     }).then(function(response){
       // console.log(...response.data)
       setStopperG(false);
-      setGroupData([...response.data])
-      
+      setGroupData([...response.data])   
     })
     
   }
@@ -300,7 +301,7 @@ export default function AddressBook() {
             </TableHead>
             <TableBody>
               {filteredData.map(row => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} hover={true}>
                   <TableCell component="th" scope="row">
                     {row.first_name}
                   </TableCell>
@@ -339,7 +340,7 @@ export default function AddressBook() {
             </TableHead>
             <TableBody>
               {filteredGroups.map(row => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} hover={true}>
                   <TableCell component="th" scope="row" align="center">
                   
                     {row.name}
@@ -348,6 +349,17 @@ export default function AddressBook() {
                       <Fab size="small" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
                         onClick={()=>{
                           setDialogView(true);
+                          setSelectedGroup(row);
+                          // setViewMember
+                          axios({
+                            method: 'get',
+                            url: `http://localhost:3001/api/viewMember?group_id=${row.id}`,
+                          }).then(function(response){
+                            // console.log(...response.data)
+                            // console.log(response);
+                            setViewMember([...response.data])
+                          })
+
                         }} >
                             <ViewIcon style={{float: 'right', color: 'white'}} />
                         </Fab>
@@ -355,14 +367,13 @@ export default function AddressBook() {
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
                         setDialogAdd(true)
                         setSelectedGroup(row);
-                         axios({
+                        axios({
                           method: 'get',
                           url: `  http://localhost:3001/api/memberList?group_id=${row.id}`,
                         }).then(function(response){
                           // console.log(...response.data)
                           // console.log(response);
                           setGroupMemberData([...response.data])
-                          
                         })
 
 
@@ -420,6 +431,8 @@ export default function AddressBook() {
     <DialogViewMember
       dialogOpen = {dialogView}
       toggleClose = {HandleView}
+      group = {selectedGroup}
+      contact = {viewMember}
 
     />
     <DialogAddMember

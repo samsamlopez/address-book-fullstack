@@ -36,9 +36,12 @@ export default function DialogDelete({
     group
 }){
   const classes = useStyles();
-  console.log(group.id)
   var contactId = [];
-  var group_name = group.name;
+  var group_name = '';
+  if(group.name){
+    group_name = group.name.toUpperCase();
+  }
+  
   
     return (
       <React.Fragment>

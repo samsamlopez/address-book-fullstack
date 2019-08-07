@@ -33,6 +33,9 @@ import DialogForm from './dialogForm';
 import DialogEdit from './dialogEdit';
 import DialogDelete from './dialogDelete';
 import DialogAddGroup from './dialogAddGroup';
+import DialogViewMember from './dialogViewMember';
+import DialogAddMember from './dialogAddMembers';
+import DialogDeleteGroup from './dialogDeleteGroup';
 
 
 const useStyles = makeStyles(theme => ({
@@ -152,10 +155,6 @@ export default function AddressBook() {
       setOpen(false);
   }
 
-  function HandleOpenEdit() {
-    setOpenEdit(true);
-    
-  }
   
   function HandleCloseEdit() {
     setOpenEdit(false);
@@ -164,6 +163,15 @@ export default function AddressBook() {
   function ToggleDelete(){
     setAlertDelete(false);
   }
+
+
+  const [dialogView,setDialogView] = useState(false);
+  const [dialogAdd,setDialogAdd] = useState(false);
+  const [dialogDelete,setDialogDelete] = useState(false);
+  function HandleView(){setDialogView(false)}
+  function HandleAdd(){setDialogAdd(false)}
+  function HandleDelete(){setDialogDelete(false)}
+
 
   return (
     <React.Fragment>
@@ -198,7 +206,7 @@ export default function AddressBook() {
         {groupToggle? null :  <Grid item xs={3} md={3}></Grid> }
 
 
-        <Grid item xs={gridSize} md={gridSize}>
+        <Grid item xs={12} md={gridSize}>
         <Paper className={classes.root}>
 
 
@@ -228,7 +236,7 @@ export default function AddressBook() {
                   }
                   
                 }} >
-                    <SoloIcon style={{float: 'right', color: 'white'}} />
+                    <GroupIcon style={{float: 'right', color: 'white'}} />
                 </Fab>
             </span>
           </div>
@@ -264,7 +272,7 @@ export default function AddressBook() {
                 }
                 
               }} >
-                  <GroupIcon style={{float: 'right', color: 'white'}} />
+                  <SoloIcon style={{float: 'right', color: 'white'}} />
               </Fab>
           </span>
           </div>
@@ -290,7 +298,7 @@ export default function AddressBook() {
                   <TableCell align="right">{row.mobile_phone}</TableCell>
                   <TableCell align="right">
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
-                        HandleOpenEdit()
+                        setOpenEdit(true);
                         setEditData(row);
                         setEditCid(row.id)
                         }}>
@@ -322,23 +330,25 @@ export default function AddressBook() {
             <TableBody>
               {filteredGroups.map(row => (
                 <TableRow key={row.id}>
-                  <TableCell component="th" scope="row" align="left">
-                  <Fab size="medium" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
-                    onClick={()=>{
-                      
-                      
-                    }} >
-                        <ViewIcon style={{float: 'right', color: 'white'}} />
-                    </Fab>
+                  <TableCell component="th" scope="row" align="center">
+                  
                     {row.name}
                   </TableCell>
                   <TableCell align="center">
+                      <Fab size="small" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
+                        onClick={()=>{
+                          setDialogView(true);
+                        }} >
+                            <ViewIcon style={{float: 'right', color: 'white'}} />
+                        </Fab>
+
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
+                         setDialogAdd(true)
                       }}>
                       <AddtoGroup />
                       </Fab>
                       <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
-                        
+                        setDialogDelete(true)
                       }} >
                         <DeleteIcon />
                       </Fab>
@@ -383,6 +393,22 @@ export default function AddressBook() {
       }}
       
       user_id = {logged_userID}
+    />
+
+    <DialogViewMember
+      dialogOpen = {dialogView}
+      toggleClose = {HandleView}
+
+    />
+    <DialogAddMember
+      dialogOpen = {dialogAdd}
+      toggleClose = {HandleAdd}
+
+    />
+    <DialogDeleteGroup
+      dialogOpen = {dialogDelete}
+      toggleClose = {HandleDelete}
+
     />
 
     </React.Fragment>

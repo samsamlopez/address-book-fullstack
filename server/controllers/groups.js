@@ -1,6 +1,6 @@
 
-// Delete Group
-// Edit group name
+// Delete Group Done
+// Edit group name Done
 
 // Add members to group DONE
 // View members per groups DONE

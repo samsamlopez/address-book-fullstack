@@ -123,7 +123,7 @@ function create(req, res) {
   function getContact(req, res){
     const db = req.app.get('db');
     const userID = req.query.id;
-    console.log(req.query.id)
+    // console.log(req.query.id)
     db
     .query(
       'Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${id} ORDER BY contact.first_name',
@@ -181,7 +181,7 @@ function create(req, res) {
   function deleteContact(req,res){
     const db = req.app.get('db');
     let deleted = [];
-    console.log(req.query.cid);
+    // console.log(req.query.cid);
     db
     .query(
       'DELETE FROM address_book WHERE contact_id=${id}',

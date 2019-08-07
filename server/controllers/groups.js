@@ -109,6 +109,19 @@ function deleteGroup(req,res){
       res.status(200).json({message:"Deleted"})
     })
 }
+// SELECT contact.* FROM contact WHERE id NOT IN(SELECT contact_id from group_list, groups WHERE groups.id = group_list.group_id AND groups.id = 2)
+function notInGroup(req,res){
+  const db = req.app.get('db');
+  const group_id = req.query.group_id
+  db
+  .query(
+    `SELECT contact.* FROM contact WHERE id NOT IN(SELECT contact_id from group_list, groups WHERE groups.id = group_list.group_id AND groups.id = ${group_id})`
+  )
+  .then(data=>{
+    res.status(200).json(data)
+  })
+
+}
 
 module.exports = {
     create,
@@ -116,5 +129,6 @@ module.exports = {
     assign,
     viewMember,
     editName,
-    deleteGroup
+    deleteGroup,
+    notInGroup
 };

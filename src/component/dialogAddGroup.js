@@ -12,6 +12,7 @@ export default function DialogDelete({
     dialogOpen,
     toggleClose,
     user_id,
+    reset,
 }){
   
     const [groupName, setGroupName] = useState('');
@@ -67,6 +68,7 @@ export default function DialogDelete({
                     data: postData
                   }).then(function(response){
                     console.log(response);
+                    reset()
                   })
 
               }} color="primary" autoFocus>

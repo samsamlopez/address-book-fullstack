@@ -22,66 +22,58 @@ import FormControl from '@material-ui/core/FormControl';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
+    
     overflowX: 'auto',
   },
   table: {
     minWidth: 100,
   },
 }));
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-
-
-
 export default function DialogDelete({
     dialogOpen,
     toggleClose,
+    contact,
+    group
 }){
   const classes = useStyles();
-
-
-
+  console.log(group.id)
+  var contactId = [];
+  var group_name = group.name;
   
     return (
       <React.Fragment>
       <Dialog open={dialogOpen} onClose={toggleClose} maxWidth="xs" fullWidth="true" aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>Add Contact to Probinsyana</DialogTitle>
-  
+        <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>Add Contacts to  {group_name} </DialogTitle>
         <DialogContent >
         
         <Paper className={classes.root}>
-          <Table className={classes.table}>
+          <Table className={classes.table} size="small">
             <TableHead>
               <TableRow>
                 <TableCell align="center">Name</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map(row => (
-                <TableRow key={row.name} hover={true} >
+              {contact.map(row => (
+                <TableRow key={row.id} hover={true} >
                   
                     <TableCell component="th" scope="row" >
                     
                     <FormControlLabel style={{marginLeft: '20px',  width: '80%'}}
                       control={
                         <Checkbox
-
                           color="primary"
+                          onClick = {()=>{
+                            if(contactId.indexOf(row.id) !== -1 ){
+                              contactId.splice(contactId.indexOf(row.id),1);
+                            }else{
+                              contactId.push(row.id);
+                            }
+                          }}
                         />
                       }
-                      label={row.name}
+                      label={`${row.last_name.toUpperCase()}, ${row.first_name.toUpperCase()}`}
+                      
                     />
                       
                     </TableCell>
@@ -101,9 +93,21 @@ export default function DialogDelete({
             Close
           </Button>
           <Button onClick={()=>{
+              var postData = {
+                contact: contactId
+              }
 
               toggleClose();
-  
+              console.log(postData);
+
+              axios({
+                method: 'post',
+                url: ` http://localhost:3001/api/addMember?group_id=${group.id}`,
+                json: true,
+                data: postData
+              }).then(function(response){
+                console.log(response);
+              })
               
           }} color="primary">
             Save

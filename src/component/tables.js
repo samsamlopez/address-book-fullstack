@@ -98,6 +98,12 @@ export default function AddressBook() {
   const [groupData, setGroupData] = useState([]);
   const [searchGroup, setSearchGroup]= useState('');
 
+  const [dialogView,setDialogView] = useState(false);
+  const [dialogAdd,setDialogAdd] = useState(false);
+  const [dialogDelete,setDialogDelete] = useState(false); 
+  const [groupMemberData, setGroupMemberData] = useState([])
+  const [selectedGroup,setSelectedGroup] = useState([]);
+
   const filteredData = contactData.filter((data)=>{
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
     let lname = data.last_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -146,6 +152,9 @@ export default function AddressBook() {
   function resetStopper(){
     setStopper(true);
   }
+  function resetStopperG(){
+    setStopperG(true);
+  }
 
   function handleClickOpen() {
     setOpen(true);
@@ -165,9 +174,10 @@ export default function AddressBook() {
   }
 
 
-  const [dialogView,setDialogView] = useState(false);
-  const [dialogAdd,setDialogAdd] = useState(false);
-  const [dialogDelete,setDialogDelete] = useState(false);
+
+ 
+
+
   function HandleView(){setDialogView(false)}
   function HandleAdd(){setDialogAdd(false)}
   function HandleDelete(){setDialogDelete(false)}
@@ -343,7 +353,19 @@ export default function AddressBook() {
                         </Fab>
 
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
-                         setDialogAdd(true)
+                        setDialogAdd(true)
+                        setSelectedGroup(row);
+                         axios({
+                          method: 'get',
+                          url: `  http://localhost:3001/api/memberList?group_id=${row.id}`,
+                        }).then(function(response){
+                          // console.log(...response.data)
+                          // console.log(response);
+                          setGroupMemberData([...response.data])
+                          
+                        })
+
+
                       }}>
                       <AddtoGroup />
                       </Fab>
@@ -391,8 +413,8 @@ export default function AddressBook() {
       toggleClose = {function(){
         setDialogGroup(!dialogGroup)
       }}
-      
       user_id = {logged_userID}
+      reset = {resetStopperG}
     />
 
     <DialogViewMember
@@ -403,6 +425,8 @@ export default function AddressBook() {
     <DialogAddMember
       dialogOpen = {dialogAdd}
       toggleClose = {HandleAdd}
+      contact = {groupMemberData}
+      group = {selectedGroup}
 
     />
     <DialogDeleteGroup

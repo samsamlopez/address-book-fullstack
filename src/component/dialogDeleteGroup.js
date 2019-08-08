@@ -7,6 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 
 export default function DialogDelete({
@@ -18,6 +20,7 @@ export default function DialogDelete({
 
     return (
         <div>
+          <ToastContainer enableMultiContainer/>
           <Dialog
             open={dialogOpen}
             onClose={toggleClose}

@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
-
+import TextField from '@material-ui/core/TextField';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -18,17 +18,26 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CheckIcon from '@material-ui/icons/Done';
+import CancelIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function DialogDelete({
     dialogOpen,
     toggleClose,
     group,
-    contact
+    contact,
+    reset
 }){
 
   const [alertDel, setAlertDel]= useState(false);
   const [cidDel, setCidDel] = useState(0);
+  const [editBool, setEditBool]= useState(true);
 
+  const [bgColor, setBgColor] = useState('#42a5f5')
+  const [editName, setEditName] = useState('');
   
 
     var group_name = '';
@@ -38,6 +47,7 @@ export default function DialogDelete({
 
     return (
         <div>
+          <ToastContainer enableMultiContainer/>
           <Dialog
             open={dialogOpen}
             onClose={toggleClose}
@@ -45,7 +55,75 @@ export default function DialogDelete({
             fullWidth="true"
             aria-labelledby="alert-dialog-title"
           >
-            <DialogTitle id="alert-dialog-title" style={{backgroundColor: '#42a5f5', color: 'white'}}>{group_name}</DialogTitle>
+            <DialogTitle id="alert-dialog-title" style={{backgroundColor: bgColor, color: 'white'}}>
+            
+            
+            {editBool?
+              <Grid container direction='row' justify='space-between' alignItems='center' >
+              <Grid item>
+                {group_name}
+              </Grid>
+              <Grid>
+                <IconButton onClick={()=>{
+                  setEditBool(false)
+                  setBgColor('white')
+                }} >
+                <EditIcon style={{width:'30px',height: '30px', color: 'white'}} />
+                </IconButton>
+              </Grid>
+            </Grid>
+
+            :
+
+            <Grid container direction='row' justify='space-between' alignItems='center' >
+            <Grid item>
+            <TextField
+              id="outlined-bare"
+              defaultValue={group_name}
+              margin="normal"
+              variant="outlined"
+              onChange= {(event)=>{
+                setEditName(event.target.value)
+              }}
+            />
+            </Grid>
+            <Grid item >
+              <IconButton onClick={()=>{
+                  setEditBool(true);
+                  setBgColor('#42a5f5');
+                  toggleClose();
+                  var postData = {
+                    name: editName
+                  }
+                  axios({
+                    method: 'patch',
+                    url: ` http://localhost:3001/api/updateName/${group.id}`,
+                    json: true,
+                    data: postData
+                  }).then(function(response){
+                    console.log(response);
+                    reset();
+                    
+                  })
+
+                }} >
+              <CheckIcon style={{width:'30px',height: '30px'}} />
+              </IconButton>
+
+              <IconButton onClick={()=>{
+                  setEditBool(true);
+                  setBgColor('#42a5f5');
+                  
+                }}>
+              <CancelIcon style={{width:'30px',height: '30px'}} />
+              </IconButton>
+            </Grid>
+          </Grid>
+            
+            }
+            
+              
+            </DialogTitle>
             <DialogContent>
             <Grid item xs={12} md={12}>
 
@@ -115,6 +193,10 @@ export default function DialogDelete({
                   url: `http://localhost:3001/api/removeMember?cid=${cidDel}&&gid=${group.id}`,
                 }).then(function(response){
                   console.log(response);
+                  toast.error("Removed Contact",{
+                    position:toast.POSITION.TOP_RIGHT,
+                    autoClose:3696
+                  })
                 })
 
 

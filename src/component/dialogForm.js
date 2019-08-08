@@ -6,6 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 
 export default function DialogForm({
     handleClose,
@@ -42,6 +45,7 @@ export default function DialogForm({
 
     return (
     <React.Fragment>
+      <ToastContainer enableMultiContainer/>
     <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title" style={{backgroundColor: '#42a5f5', color:'white'}}>ADD CONTACT</DialogTitle>
 
@@ -217,6 +221,13 @@ export default function DialogForm({
               data: postData
             }).then(function(response){
               // console.log(response.data.token)
+              setTimeout(()=>{
+                toast.success("Successfully added",{
+                  position:toast.POSITION.TOP_RIGHT,
+                  autoClose:3696
+                })
+              },200)
+              
             })
             reset()
         }} color="primary">

@@ -27,8 +27,6 @@ import ViewIcon from '@material-ui/icons/Visibility';
 
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
-
-
 import DialogForm from './dialogForm';
 import DialogEdit from './dialogEdit';
 import DialogDelete from './dialogDelete';
@@ -36,7 +34,9 @@ import DialogAddGroup from './dialogAddGroup';
 import DialogViewMember from './dialogViewMember';
 import DialogAddMember from './dialogAddMembers';
 import DialogDeleteGroup from './dialogDeleteGroup';
-
+import NoDataFound from '../images/no_data_found.png';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -68,8 +68,8 @@ export default function AddressBook() {
   const token = localStorage.getItem('token');
   const firstname = localStorage.getItem('firstname');
   const lastname = localStorage.getItem('lastname');
-  if(!token){
-    window.location.href='/#/';
+  if(token === "" || token === null){
+    window.location.href='/';
   }
   
 
@@ -90,7 +90,7 @@ export default function AddressBook() {
   const [deleteId, setDeleteId] = useState(0);
 
   const [groupToggle, setGroupToggle] = useState(true);
-  const [gridSize, setGridSize] = useState(12);
+  const [gridSize, setGridSize] = useState(8);
   const [dialogGroup, setDialogGroup] = useState(false);
 
 
@@ -104,7 +104,8 @@ export default function AddressBook() {
   const [groupMemberData, setGroupMemberData] = useState([])
   const [selectedGroup,setSelectedGroup] = useState([]);
   const [viewMember,setViewMember] = useState([]);
-
+  const [noContact, setContact] = useState(true)
+  const [noGroup, setGroup] = useState(true)
 
   const filteredData = contactData.filter((data)=>{
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -120,7 +121,7 @@ export default function AddressBook() {
     
     
   });
-
+  
 
   if(stopper){
     axios({
@@ -130,8 +131,14 @@ export default function AddressBook() {
       // console.log(...response.data)
       setContactData([...response.data])
       setStopper(false);
+      if(response.data.length>0){
+        setContact(false)
+      }else{
+        setContact(true)
+      }
     })
   }
+  
 
   if(stopperG){
     axios({
@@ -141,9 +148,17 @@ export default function AddressBook() {
       // console.log(...response.data)
       setStopperG(false);
       setGroupData([...response.data])   
+      if(response.data.length>0){
+        setGroup(false)
+      }else{
+        setGroup(true)
+      }
     })
     
   }
+
+  
+  console.log(noContact,"-",noGroup)
 
   // http://localhost:3001/api/getGroups?id=1
 
@@ -186,6 +201,7 @@ export default function AddressBook() {
 
   return (
     <React.Fragment>
+    <ToastContainer enableMultiContainer/>
     <AppBar position="static" style={{
         backgroundColor: '#a43cbd'
     }}>
@@ -209,12 +225,12 @@ export default function AddressBook() {
         </Toolbar>
     </AppBar>
     
-    <Grid container  style={{padding: '50px'}}>
+    <Grid container  style={{padding: '50px'}} justify="center" >
         <Grid item xs={12} md={12} style={{display:'flex', justifyContent: 'center'}}>
           <h2>Welcome {lastname.toLocaleUpperCase()}, {firstname.toLocaleUpperCase()}!</h2>
       
         </Grid>
-        {groupToggle? null :  <Grid item xs={3} md={3}></Grid> }
+        
 
 
         <Grid item xs={12} md={gridSize}>
@@ -241,7 +257,7 @@ export default function AddressBook() {
                 onClick={()=>{
                   setGroupToggle(!groupToggle);
                   if(gridSize === 6){
-                    setGridSize(12)
+                    setGridSize(8)
                   }else{
                     setGridSize(6)
                   }
@@ -277,7 +293,7 @@ export default function AddressBook() {
               onClick={()=>{
                 setGroupToggle(!groupToggle);
                 if(gridSize === 6){
-                  setGridSize(12)
+                  setGridSize(8)
                 }else{
                   setGridSize(6)
                 }
@@ -290,22 +306,29 @@ export default function AddressBook() {
           }
 
 
-          {groupToggle?<Table className={classes.table}>
+          {groupToggle?
+          <Table className={classes.table}>
             <TableHead> 
               <TableRow>
-                <TableCell>FIRST NAME</TableCell>
-                <TableCell align="right">LAST NAME</TableCell>
+                <TableCell>LAST NAME</TableCell>
+                <TableCell align="right">FIRST NAME</TableCell>
                 <TableCell align="right">MOBILE NUMBER</TableCell>
                 <TableCell align="right">ACTION </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredData.map(row => (
+              {noContact? 
+                <TableCell colSpan={4}>
+                <img src={NoDataFound} alt="NoDataFound" width="100%" height="100%" />
+                </TableCell>
+              :
+                filteredData.map(row => (
                 <TableRow key={row.id} hover={true}>
                   <TableCell component="th" scope="row">
-                    {row.first_name}
+                    
+                    {row.last_name}
                   </TableCell>
-                  <TableCell align="right">{row.last_name}</TableCell>
+                  <TableCell align="right">{row.first_name}</TableCell>
                   <TableCell align="right">{row.mobile_phone}</TableCell>
                   <TableCell align="right">
                       <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
@@ -324,7 +347,11 @@ export default function AddressBook() {
                       </Fab>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+              }
+
+
+
             </TableBody>
           </Table>
           :
@@ -339,55 +366,64 @@ export default function AddressBook() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredGroups.map(row => (
-                <TableRow key={row.id} hover={true}>
-                  <TableCell component="th" scope="row" align="center">
-                  
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="center">
-                      <Fab size="small" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
-                        onClick={()=>{
-                          setDialogView(true);
+
+              {noGroup?
+                <TableCell colSpan={2}>
+                <img src={NoDataFound} alt="NoDataFound" width="100%" height="100%" />
+                </TableCell>
+              :
+              
+                filteredGroups.map(row => (
+                  <TableRow key={row.id} hover={true}>
+                    <TableCell component="th" scope="row" align="center">
+                    
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="center">
+                        <Fab size="small" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
+                          onClick={()=>{
+                            setDialogView(true);
+                            setSelectedGroup(row);
+                            // setViewMember
+                            axios({
+                              method: 'get',
+                              url: `http://localhost:3001/api/viewMember?group_id=${row.id}`,
+                            }).then(function(response){
+                              // console.log(...response.data)
+                              // console.log(response);
+                              setViewMember([...response.data])
+                            })
+
+                          }} >
+                              <ViewIcon style={{float: 'right', color: 'white'}} />
+                          </Fab>
+
+                        <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
+                          setDialogAdd(true)
                           setSelectedGroup(row);
-                          // setViewMember
                           axios({
                             method: 'get',
-                            url: `http://localhost:3001/api/viewMember?group_id=${row.id}`,
+                            url: `  http://localhost:3001/api/memberList?group_id=${row.id}`,
                           }).then(function(response){
                             // console.log(...response.data)
                             // console.log(response);
-                            setViewMember([...response.data])
+                            setGroupMemberData([...response.data])
                           })
 
-                        }} >
-                            <ViewIcon style={{float: 'right', color: 'white'}} />
+
+                        }}>
+                        <AddtoGroup />
                         </Fab>
 
-                      <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
-                        setDialogAdd(true)
-                        setSelectedGroup(row);
-                        axios({
-                          method: 'get',
-                          url: `  http://localhost:3001/api/memberList?group_id=${row.id}`,
-                        }).then(function(response){
-                          // console.log(...response.data)
-                          // console.log(response);
-                          setGroupMemberData([...response.data])
-                        })
+                    </TableCell>
+                  </TableRow>
+                ))
 
+              }
+                
+              
 
-                      }}>
-                      <AddtoGroup />
-                      </Fab>
-                      {/* <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
-                        setDialogDelete(true)
-                      }} >
-                        <DeleteIcon />
-                      </Fab> */}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {}
             </TableBody>
           </Table>
           }
@@ -433,7 +469,7 @@ export default function AddressBook() {
       toggleClose = {HandleView}
       group = {selectedGroup}
       contact = {viewMember}
-
+      reset = {resetStopperG}
     />
     <DialogAddMember
       dialogOpen = {dialogAdd}

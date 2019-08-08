@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function DialogForm({
     closeEdit,
@@ -30,6 +32,7 @@ export default function DialogForm({
  
     return (
     <React.Fragment>
+      <ToastContainer enableMultiContainer/>
     <Dialog open={dialogOpen} onClose={closeEdit} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>View or Edit Details</DialogTitle>
 
@@ -213,6 +216,10 @@ export default function DialogForm({
                 data: postData
             }).then(function(response){
             // console.log(response.data.token)
+            toast.success("Successfully Updated",{
+              position:toast.POSITION.TOP_RIGHT,
+              autoClose:3696
+            })
             })
             reset()
             //action

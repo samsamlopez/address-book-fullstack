@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
+
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 
@@ -18,6 +18,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,6 +47,7 @@ export default function DialogDelete({
   
     return (
       <React.Fragment>
+      <ToastContainer enableMultiContainer/>
       <Dialog open={dialogOpen} onClose={toggleClose} maxWidth="xs" fullWidth="true" aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>Add Contacts to  {group_name} </DialogTitle>
         <DialogContent >
@@ -111,6 +114,10 @@ export default function DialogDelete({
                 data: postData
               }).then(function(response){
                 console.log(response);
+                toast.success("Successfully added",{
+                  position:toast.POSITION.TOP_RIGHT,
+                  autoClose:3696
+                })
               })
               
           }} color="primary">

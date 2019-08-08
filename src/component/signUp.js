@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 
 const useStyles = makeStyles(theme => ({
@@ -126,6 +128,7 @@ export default function SignUp() {
       paddingBottom:'15px', 
       borderRadius: '5px'
       }}>
+      <ToastContainer enableMultiContainer/>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

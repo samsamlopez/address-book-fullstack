@@ -6,7 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function DialogDelete({
     dialogOpen,
@@ -18,6 +19,7 @@ export default function DialogDelete({
 
     return (
         <div>
+          <ToastContainer enableMultiContainer/>
           <Dialog
             open={dialogOpen}
             onClose={toggleClose}
@@ -40,7 +42,10 @@ export default function DialogDelete({
                       method: 'delete',
                       url: `  http://localhost:3001/api/delete?cid=${deleteId}`,
                     }).then(function(response){
-                        
+                      toast.error("Deleted",{
+                        position:toast.POSITION.TOP_RIGHT,
+                        autoClose:3696
+                      })
                     // console.log(response.data.token)
                     })
                     reset();

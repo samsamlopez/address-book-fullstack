@@ -34,6 +34,7 @@ massive({
     app.patch('/api/updateName/:id', groups.editName);
     app.delete('/api/deleteGroup', groups.deleteGroup);
     app.get('/api/memberList', groups.notInGroup);
+    app.delete('/api/removeMember', groups.removeMember);
   
     const PORT = 3001;
     app.listen(PORT, () => {

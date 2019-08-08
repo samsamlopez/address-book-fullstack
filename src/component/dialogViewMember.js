@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 
@@ -16,12 +16,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function DialogDelete({
@@ -30,6 +25,12 @@ export default function DialogDelete({
     group,
     contact
 }){
+
+  const [alertDel, setAlertDel]= useState(false);
+  const [cidDel, setCidDel] = useState(0);
+
+  
+
     var group_name = '';
     if(group.name){
         group_name = group.name.toUpperCase()
@@ -63,7 +64,8 @@ export default function DialogDelete({
                             <ListItemSecondaryAction>
                                 <IconButton edge="end" aria-label="delete" 
                                 onClick={()=>{
-
+                                  setAlertDel(true)
+                                  setCidDel(row.id);
                                 }}
                                 >
                                 <DeleteIcon />
@@ -82,6 +84,46 @@ export default function DialogDelete({
               </Button>
             </DialogActions>
           </Dialog>
+
+
+
+          <Dialog
+            open={alertDel}
+            onClose={()=>{setAlertDel(false)}}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title" style={{backgroundColor: '#f44336', color: 'white'}}>{"Remove Member"}</DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+                Are you sure you want to remove this?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={()=>{setAlertDel(false)}} color="primary">
+                No
+              </Button>
+              <Button 
+ 
+              onClick={()=>{
+                setAlertDel(false)
+                toggleClose()
+                console.log(group.id, " - ", cidDel)
+
+                axios({
+                  method: 'delete',
+                  url: `http://localhost:3001/api/removeMember?cid=${cidDel}&&gid=${group.id}`,
+                }).then(function(response){
+                  console.log(response);
+                })
+
+
+              }} color="primary" autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </div>
       );
 }

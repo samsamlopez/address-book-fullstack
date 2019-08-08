@@ -72,6 +72,7 @@ export default function DialogDelete({
                             }else{
                               contactId.push(row.id);
                             }
+                            
                           }}
                         />
                       }
@@ -101,7 +102,7 @@ export default function DialogDelete({
               }
 
               toggleClose();
-              console.log(postData);
+              // console.log(postData);
 
               axios({
                 method: 'post',

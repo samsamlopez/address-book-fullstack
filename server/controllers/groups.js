@@ -120,7 +120,18 @@ function notInGroup(req,res){
   .then(data=>{
     res.status(200).json(data)
   })
+}
 
+function removeMember(req,res){
+  const db= req.app.get('db');
+  console.log(req.query.cid, " - ", req.query.gid)
+  db
+  .query(
+    `DELETE FROM group_list WHERE contact_id=${req.query.cid} AND group_id=${req.query.gid}`
+  ).then(data=>{
+    res.status(200).json({message: "Deleted"})
+    
+  })
 }
 
 module.exports = {
@@ -130,5 +141,6 @@ module.exports = {
     viewMember,
     editName,
     deleteGroup,
-    notInGroup
+    notInGroup,
+    removeMember
 };

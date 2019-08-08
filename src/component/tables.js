@@ -380,11 +380,11 @@ export default function AddressBook() {
                       }}>
                       <AddtoGroup />
                       </Fab>
-                      <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
+                      {/* <Fab size="small" style={{backgroundColor: '#f44336', color: 'white'}} aria-label="add" className={classes.margin} onClick={()=>{
                         setDialogDelete(true)
                       }} >
                         <DeleteIcon />
-                      </Fab>
+                      </Fab> */}
                   </TableCell>
                 </TableRow>
               ))}

@@ -24,6 +24,7 @@ import AddtoGroup from '@material-ui/icons/GroupAdd';
 import GroupAddIcon from '@material-ui/icons/LibraryAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import ViewIcon from '@material-ui/icons/Visibility';
+import UpDownIcon from '@material-ui/icons/ImportExport'
 
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
@@ -98,6 +99,7 @@ export default function AddressBook() {
   const [stopperG, setStopperG] = useState(true);
   const [groupData, setGroupData] = useState([]);
   const [searchGroup, setSearchGroup]= useState('');
+  
 
   const [dialogView,setDialogView] = useState(false);
   const [dialogAdd,setDialogAdd] = useState(false);
@@ -107,6 +109,8 @@ export default function AddressBook() {
   const [viewMember,setViewMember] = useState([]);
   const [noContact, setContact] = useState(true)
   const [noGroup, setGroup] = useState(true)
+
+  const [ordered,setOrdered] = useState('ASC');
 
   const filteredData = contactData.filter((data)=>{
     let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -127,7 +131,7 @@ export default function AddressBook() {
   if(stopper){
     axios({
       method: 'get',
-      url: ` http://localhost:3001/api/getContact?id=${logged_userID}`,
+      url: ` http://localhost:3001/api/getContact?id=${logged_userID}&&sort=${ordered}`,
     }).then(function(response){
       // console.log(...response.data)
       setContactData([...response.data])
@@ -190,16 +194,11 @@ export default function AddressBook() {
     setAlertDelete(false);
   }
 
-
-
- 
-
-
   function HandleView(){setDialogView(false)}
   function HandleAdd(){setDialogAdd(false)}
   function HandleDelete(){setDialogDelete(false)}
 
-
+  console.log(ordered);
   return (
     <React.Fragment>
     <ToastContainer enableMultiContainer/>
@@ -311,7 +310,21 @@ export default function AddressBook() {
           <Table className={classes.table}>
             <TableHead> 
               <TableRow>
-                <TableCell>LAST NAME</TableCell>
+                <TableCell>
+
+
+                  LAST NAME 
+                  <UpDownIcon style={{cursor:'pointer'}} onClick={()=>{
+                    if(ordered === "ASC"){
+                      setOrdered('DESC');
+                    }else{
+                      setOrdered('ASC')
+                    }
+                    setStopper(true);
+                    
+                  }} />
+                  
+                 </TableCell>
                 <TableCell align="right">FIRST NAME</TableCell>
                 <TableCell align="right">MOBILE NUMBER</TableCell>
                 <TableCell align="right">ACTION </TableCell>

@@ -65,8 +65,6 @@ export default function SignUp() {
   const [btnSignUp, setBtnSignUp] = useState(true);
 
   // localStorage.setItem('token', token);
-
-
   let storeData = {
     username: username,
     password: password,
@@ -160,8 +158,6 @@ export default function SignUp() {
                   HandleChange(e.target.value,"firstname")
                   BtnChange();
                 }}
-                
-
               />
             </Grid>
             <Grid item xs={12} sm={6}>

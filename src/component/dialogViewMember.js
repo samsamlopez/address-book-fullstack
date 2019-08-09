@@ -217,9 +217,6 @@ export default function DialogViewMember({
                   url: `http://localhost:3001/api/removeMember?cid=${cidDel}&&gid=${group.id}`,
                 }).then(function(response){
                   console.log(response);
-
-
-                  
                 setTimeout(()=>{
                   toast.error("Removed Contact",{
                     position:toast.POSITION.TOP_RIGHT,
@@ -227,8 +224,6 @@ export default function DialogViewMember({
                   })
                 },200)
                 })
-
-
               }} color="primary" autoFocus>
                 Yes
               </Button>

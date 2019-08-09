@@ -126,10 +126,8 @@ function create(req, res) {
     // console.log(req.query.id)
     db
     .query(
-      'Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${id} ORDER BY contact.first_name',
-      {
-        id:req.query.id
-      }
+      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name ${req.query.sort}`
+
     )
     .then(data=>{
       res.status(200).json(data)

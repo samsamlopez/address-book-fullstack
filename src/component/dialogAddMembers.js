@@ -114,10 +114,14 @@ export default function DialogDelete({
                 data: postData
               }).then(function(response){
                 console.log(response);
-                toast.success("Successfully added",{
-                  position:toast.POSITION.TOP_RIGHT,
-                  autoClose:3696
-                })
+
+                setTimeout(()=>{
+                  toast.success("Assigned contact to group",{
+                    position:toast.POSITION.TOP_RIGHT,
+                    autoClose:3696
+                  })
+                },200)
+                
               })
               
           }} color="primary">

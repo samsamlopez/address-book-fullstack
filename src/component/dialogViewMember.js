@@ -103,6 +103,12 @@ export default function DialogDelete({
                   }).then(function(response){
                     console.log(response);
                     reset();
+                    setTimeout(()=>{
+                      toast.success("Updated Group Name",{
+                        position:toast.POSITION.TOP_RIGHT,
+                        autoClose:3696
+                      })
+                    },200)
                     
                   })
 
@@ -193,10 +199,17 @@ export default function DialogDelete({
                   url: `http://localhost:3001/api/removeMember?cid=${cidDel}&&gid=${group.id}`,
                 }).then(function(response){
                   console.log(response);
-                  toast.error("Removed Contact",{
-                    position:toast.POSITION.TOP_RIGHT,
-                    autoClose:3696
-                  })
+
+
+                  
+                  setTimeout(()=>{
+                    toast.error("Removed Contact",{
+                      position:toast.POSITION.TOP_RIGHT,
+                      autoClose:3696
+                    })
+                  },200)
+
+
                 })
 
 

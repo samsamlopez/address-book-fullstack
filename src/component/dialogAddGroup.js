@@ -73,10 +73,14 @@ export default function DialogDelete({
                     console.log(response);
                     reset()
                   })
-                  toast.success("Successfully added",{
-                    position:toast.POSITION.TOP_RIGHT,
-                    autoClose:3696
-                  })
+
+                  setTimeout(()=>{
+                    toast.success("Successfully added",{
+                      position:toast.POSITION.TOP_RIGHT,
+                      autoClose:3696
+                    })
+                  },200)
+                  
 
               }} color="primary" autoFocus>
                 Add Group

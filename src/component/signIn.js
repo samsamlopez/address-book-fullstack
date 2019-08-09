@@ -67,6 +67,11 @@ export default function SignInSide(name) {
   const [errorPass, setErrorPass] = useState(false);
   const [helperTextPass, setHelperTextPass] = useState(false);
   const [btnSignIn, setBtnSignIn] = useState(true);
+
+  const token = localStorage.getItem('token');
+  if(token !== null){
+    window.location.href='/#/address/';
+  }
   
 
   function HandleChangeUser(event){
@@ -179,7 +184,6 @@ export default function SignInSide(name) {
                   json: true,
                   data: userData
                 }).then(function(response){
-                  // console.log(response.data.token)
                   localStorage.setItem('token', response.data.token);
                   localStorage.setItem('firstname',response.data.firstname)
                   localStorage.setItem('lastname',response.data.lastname)

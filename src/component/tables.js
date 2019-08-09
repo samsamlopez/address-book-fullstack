@@ -68,6 +68,7 @@ export default function AddressBook() {
   const token = localStorage.getItem('token');
   const firstname = localStorage.getItem('firstname');
   const lastname = localStorage.getItem('lastname');
+
   if(token === "" || token === null){
     window.location.href='/';
   }

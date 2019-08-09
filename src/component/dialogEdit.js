@@ -216,10 +216,14 @@ export default function DialogForm({
                 data: postData
             }).then(function(response){
             // console.log(response.data.token)
-            toast.success("Successfully Updated",{
-              position:toast.POSITION.TOP_RIGHT,
-              autoClose:3696
-            })
+            
+
+              setTimeout(()=>{
+                toast.success("Successfully Updated",{
+                  position:toast.POSITION.TOP_RIGHT,
+                  autoClose:3696
+                })
+              },200)
             })
             reset()
             //action

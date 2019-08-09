@@ -42,10 +42,16 @@ export default function DialogDelete({
                       method: 'delete',
                       url: `  http://localhost:3001/api/delete?cid=${deleteId}`,
                     }).then(function(response){
-                      toast.error("Deleted",{
-                        position:toast.POSITION.TOP_RIGHT,
-                        autoClose:3696
-                      })
+                      
+                      setTimeout(()=>{
+                        toast.error(`Deleted`,{
+                          position:toast.POSITION.TOP_RIGHT,
+                          autoClose:3696
+                        })
+                      },200)
+                      
+ 
+                      
                     // console.log(response.data.token)
                     })
                     reset();

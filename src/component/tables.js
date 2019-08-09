@@ -74,7 +74,7 @@ export default function AddressBook() {
     window.location.href='/';
   }
   
-
+  
   var decoded = jwtDecode(token);
   const logged_userID = decoded.userId;
   const classes = useStyles();
@@ -123,8 +123,7 @@ export default function AddressBook() {
   });
   const filteredGroups = groupData.filter((data)=>{
     return data.name.toLowerCase().indexOf(searchGroup.toLowerCase()) !== -1;
-    
-    
+
   });
   
 
@@ -345,7 +344,7 @@ export default function AddressBook() {
                   <TableCell align="right">{row.first_name}</TableCell>
                   <TableCell align="right">{row.mobile_phone}</TableCell>
                   <TableCell align="right">
-                      <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
+                      <Fab size="small" style={{backgroundColor: '#6d4c41', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
                         setOpenEdit(true);
                         setEditData(row);
                         setEditCid(row.id)
@@ -394,7 +393,7 @@ export default function AddressBook() {
                       {row.name}
                     </TableCell>
                     <TableCell align="center">
-                        <Fab size="small" style={{backgroundColor: '#fb8c00', marginRight: '10px'}} aria-label="Group" 
+                        <Fab size="small" style={{backgroundColor: '#00796b', marginRight: '10px'}} aria-label="Group" 
                           onClick={()=>{
                             setDialogView(true);
                             setSelectedGroup(row);
@@ -412,7 +411,7 @@ export default function AddressBook() {
                               <ViewIcon style={{float: 'right', color: 'white'}} />
                           </Fab>
 
-                        <Fab size="small" style={{backgroundColor: '#cddc39', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
+                        <Fab size="small" style={{backgroundColor: '#6d4c41', color: 'white', marginRight: '10px'}} aria-label="add" className={classes.margin}  onClick={()=>{
                           setDialogAdd(true)
                           setSelectedGroup(row);
                           axios({

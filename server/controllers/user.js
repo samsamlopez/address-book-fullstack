@@ -7,30 +7,49 @@ function create(req, res) {
     const db = req.app.get('db');
   
     const { username, password, firstname, lastname } = req.body;
-  
-    argon2
-    .hash(password)
-    .then(hash => {
-      return db.users.insert(
+
+
+    db.users
+      .find(
         {
-          username,
-          password: hash,
-          firstname,
-          lastname
-        },
-        {
-          fields: ['id', 'username', 'firstname', 'lastname'],
+          username
         }
-      );
-    })
-    .then(user => {
-      const token = jwt.sign({ userId: user.id }, secret); // adding token generation
-      res.status(201).json({ ...user, token });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).end();
-    });
+      )
+      .then(data=>{
+        if(data.length !== 0){
+          res.status(200).json({error:true, message:'User Already exists'})
+        }else{
+
+          argon2
+          .hash(password)
+          .then(hash => {
+            return db.users.insert(
+              {
+                username,
+                password: hash,
+                firstname,
+                lastname
+              },
+              {
+                fields: ['id', 'username', 'firstname', 'lastname'],
+              }
+            );
+          })
+          .then(user => {
+            const token = jwt.sign({ userId: user.id }, secret); // adding token generation
+            res.status(201).json({ ...user, token });
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(500).end();
+          });
+
+        }
+      })
+
+
+  
+    
   }
 
   function login(req, res) {
@@ -217,6 +236,18 @@ function create(req, res) {
     })
   }
 
+  function getAllUsername(req,res){
+    const db = req.app.get('db');
+
+    db
+    .query(
+      `SELECT username FROM users`
+    )
+    .then(data=>{
+      res.status(200).json(data)
+    })
+  }
+
 module.exports = {
     create,
     login,
@@ -224,5 +255,6 @@ module.exports = {
     getContact,
     updateContact,
     deleteContact,
-    getUserDetails
+    getUserDetails,
+    getAllUsername
   };

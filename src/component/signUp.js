@@ -64,6 +64,7 @@ export default function SignUp() {
   const [helperP, setHelperP] = useState('');
   const [btnSignUp, setBtnSignUp] = useState(true);
 
+
   // localStorage.setItem('token', token);
   let storeData = {
     username: username,
@@ -72,6 +73,8 @@ export default function SignUp() {
     lastname: lastname,
   }
 
+
+
   function BtnChange(){
     if(username.length > 0 && lastname.length > 0 && password.length > 0 && firstname.length > 0){
       setBtnSignUp(false);
@@ -79,6 +82,7 @@ export default function SignUp() {
       setBtnSignUp(true);
     }
   }
+
 
   function HandleChange(event, field){
     if(field === "firstname"){
@@ -152,6 +156,8 @@ export default function SignUp() {
                 onBlur={(e)=>{
                   HandleChange(e.target.value,"firstname")
                   BtnChange();
+                  
+
                 }}
                 onChange= {(e)=>{
                   setFirstname(e.target.value);
@@ -197,6 +203,7 @@ export default function SignUp() {
                 onBlur={(e)=>{
                   HandleChange(e.target.value,"username")
                   BtnChange();
+                  
                 }}
                 onChange= {(e)=>{
                   setUsername(e.target.value);
@@ -228,12 +235,7 @@ export default function SignUp() {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
+            
           </Grid>
           <Button
             fullWidth
@@ -251,7 +253,15 @@ export default function SignUp() {
                 data: storeData
               }).then(function(response){
                 console.log(response.data.token)
-               
+                if(response.data.error){
+                  toast.error(response.data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3696
+                  })
+                }else{
+                  window.location.href='/#/'
+                }
+                
               })
 
  

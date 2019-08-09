@@ -21,6 +21,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import DeleteAlert from './dialogDeleteGroup';
+import Typography from '@material-ui/core/Typography';
 
 export default function DialogViewMember({
     dialogOpen,
@@ -34,12 +35,21 @@ export default function DialogViewMember({
   const [cidDel, setCidDel] = useState(0);
   const [editBool, setEditBool]= useState(true);
 
-  const [bgColor, setBgColor] = useState('#42a5f5')
+  const [bgColor, setBgColor] = useState('#00796b')
   const [editName, setEditName] = useState(''); 
   const [popDel, setPopDel] = useState(false);
 
+
   function PopClose(){
     setPopDel(false);
+  }
+
+  var noData = false
+
+  if(contact.length > 0){
+    noData = false
+  }else{
+    noData = true
   }
 
   var deleteAvailable = true;
@@ -151,7 +161,12 @@ export default function DialogViewMember({
             <DialogContent>
             <Grid item xs={12} md={12}>
 
-                    {contact.map(row =>(
+                    {noData?
+                    <Typography variant="h4" align="center">
+                        No Members Found
+                    </Typography>
+                    :
+                    contact.map(row =>(
                     <List dense={true} key ={row.id}>
                         <ListItem>
                             {/* <ListItemAvatar>

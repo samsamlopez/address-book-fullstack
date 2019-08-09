@@ -164,10 +164,7 @@ export default function SignInSide(name) {
                 HandleChangePass(event.target.value);
               }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            
             <Button
               type="submit"
 
@@ -201,11 +198,7 @@ export default function SignInSide(name) {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                {/* <Link href="#" variant="body2"> */}
-                  Forgot password?
-                {/* </Link> */}
-              </Grid>
+              
               <Grid item>
                 <Link to="/signup">
                   {"Don't have an account? Sign Up"}

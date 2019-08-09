@@ -26,6 +26,7 @@ massive({
     app.patch('/api/update', users.updateContact);
     app.delete('/api/delete', users.deleteContact);
     app.get('/api/userDetails/:id', users.getUserDetails);
+    app.get('/api/getUsename', users.getAllUsername)
     
     app.post('/api/addGroup',groups.create);
     app.get('/api/getGroups',groups.fetch);

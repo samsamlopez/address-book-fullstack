@@ -34,7 +34,7 @@ export default function DialogForm({
     <React.Fragment>
       <ToastContainer enableMultiContainer/>
     <Dialog open={dialogOpen} onClose={closeEdit} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>View or Edit Details</DialogTitle>
+      <DialogTitle id="form-dialog-title" style={{backgroundColor: '#6d4c41', color: 'white'}}>View or Edit Details</DialogTitle>
 
       <DialogContent style={{
         display: "flex",

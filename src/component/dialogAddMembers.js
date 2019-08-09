@@ -20,6 +20,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,15 +46,51 @@ export default function DialogDelete({
   if(group.name){
     group_name = group.name.toUpperCase();
   }
+  const [search, setSearch] = useState('');
   
+  const filteredData = contact.filter((data)=>{
+    let fname = data.first_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+    let lname = data.last_name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+    if(fname){
+      return fname;
+    }else{
+      return lname;
+    }
+  });
+
+
+  var noData = false
+  
+  if(contact.length > 0){
+    noData = false
+  }else{
+    noData = true
+  }
   
     return (
       <React.Fragment>
       <ToastContainer enableMultiContainer/>
       <Dialog open={dialogOpen} onClose={toggleClose} maxWidth="xs" fullWidth="true" aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title" style={{backgroundColor: '#cddc39', color: 'black'}}>Add Contacts to  {group_name} </DialogTitle>
+        <DialogTitle id="form-dialog-title" style={{backgroundColor: '#6d4c41', color: 'white'}}>Add Contacts to  {group_name} </DialogTitle>
+        {noData?
         <DialogContent >
-        
+          <Typography variant="h4" align="center">
+          No Members Found
+          </Typography>
+        </DialogContent >
+          : 
+        <DialogContent >
+        <span style={{float: 'right', marginTop: '5px', marginBottom: '10px'}}>
+              <SearchIcon style={{marginTop: '21px', marginRight: '7px', color: 'gray'}} />
+              <TextField
+                id="standard-search"
+                label="Search field"
+                type="search"
+                onChange={(event)=>{
+                  setSearch(event.target.value);
+                }}
+                />
+        </span> 
         <Paper className={classes.root}>
           <Table className={classes.table} size="small">
             <TableHead>
@@ -60,7 +99,7 @@ export default function DialogDelete({
               </TableRow>
             </TableHead>
             <TableBody>
-              {contact.map(row => (
+              {filteredData.map(row => (
                 <TableRow key={row.id} hover={true} >
                   
                     <TableCell component="th" scope="row" >
@@ -80,7 +119,6 @@ export default function DialogDelete({
                         />
                       }
                       label={`${row.last_name.toUpperCase()}, ${row.first_name.toUpperCase()}`}
-                      
                     />
                       
                     </TableCell>
@@ -92,7 +130,7 @@ export default function DialogDelete({
           </Table>
         </Paper>
   
-        </DialogContent>
+        </DialogContent>}
   
   
         <DialogActions style={{margin: "auto"}}>

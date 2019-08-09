@@ -1,15 +1,20 @@
 
-// Delete Group Done
-// Edit group name Done
-
-// Add members to group DONE
-// View members per groups DONE
+const jwt = require('jsonwebtoken');
+const secret = require('../../secret.js')
 
 function create(req,res){
     const db = req.app.get('db');
     const {name, user_id} = req.body
 
-    db.groups
+
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, secret);
+
+      db.groups
     .insert(
       {
         name,
@@ -19,12 +24,24 @@ function create(req,res){
     .then(data=>{
         res.status(201).json(data)
     })
+   }catch (err) {
+      res.status(500).end();
+    }
+
+    
 }
 
 function fetch(req,res){
   const db = req.app.get('db');
 
-  db
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+
+    db
   .query(
     'SELECT * FROM groups WHERE user_id = ${id}',
     {
@@ -34,6 +51,11 @@ function fetch(req,res){
   .then(data=>{
     res.status(200).json(data)
   })
+ }catch (err) {
+    res.status(500).end();
+  }
+
+  
 }
 
 function assign(req,res){
@@ -42,7 +64,15 @@ function assign(req,res){
   const group_id = req.query.group_id
   // console.log(group_id);
   var temp_res = [];
-  contact.map(contact_id=>{
+
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+
+    contact.map(contact_id=>{
     // console.log(contact_id)
     db.group_list
     .insert(
@@ -56,21 +86,37 @@ function assign(req,res){
       res.status(201).json(temp_res);
     })
   })
+ }catch (err) {
+    res.status(500).end();
+  }
+  
 }
 
 function viewMember(req, res){
   const db = req.app.get('db');
 
-  db
-  .query(
-    'SELECT contact.* from contact,groups,group_list WHERE  contact.id = group_list.contact_id AND groups.id = group_list.group_id AND groups.id = ${id} ',
-    {
-      id:req.query.group_id
-    }
-  )
-  .then(data=>{
-    res.status(200).json(data)
-  })
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+    db
+      .query(
+        'SELECT contact.* from contact,groups,group_list WHERE  contact.id = group_list.contact_id AND groups.id = group_list.group_id AND groups.id = ${id} ',
+        {
+          id:req.query.group_id
+        }
+      )
+      .then(data=>{
+        res.status(200).json(data)
+      })
+    
+ }catch (err) {
+    res.status(500).end();
+  }
+
+  
 
 }
 
@@ -78,7 +124,14 @@ function editName(req,res){
   const db = req.app.get('db');
   const {name} = req.body
 
-  db.groups
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+
+    db.groups
   .update(
     {
       id: req.params.id,
@@ -91,6 +144,11 @@ function editName(req,res){
   .catch(err => {
     console.error(err);
   });
+ }catch (err) {
+    res.status(500).end();
+  }
+  
+  
 
 
 }
@@ -98,7 +156,14 @@ function editName(req,res){
 function deleteGroup(req,res){
   const db = req.app.get('db');
 
-  db
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+
+    db
     .query(
       'DELETE FROM groups WHERE id=${id}',
       {
@@ -108,30 +173,59 @@ function deleteGroup(req,res){
     .then(data=>{
       res.status(200).json({message:"Deleted"})
     })
+ }catch (err) {
+    res.status(500).end();
+  }
+  
 }
 // SELECT contact.* FROM contact WHERE id NOT IN(SELECT contact_id from group_list, groups WHERE groups.id = group_list.group_id AND groups.id = 2)
 function notInGroup(req,res){
   const db = req.app.get('db');
-  const group_id = req.query.group_id
-  db
+  const group_id = req.query.group_id;
+
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+
+    db
   .query(
     `SELECT contact.* FROM contact WHERE id NOT IN(SELECT contact_id from group_list, groups WHERE groups.id = group_list.group_id AND groups.id = ${group_id})`
   )
   .then(data=>{
     res.status(200).json(data)
   })
+ }catch (err) {
+    res.status(500).end();
+  }
+
+  
 }
 
 function removeMember(req,res){
   const db= req.app.get('db');
-  console.log(req.query.cid, " - ", req.query.gid)
-  db
+  // console.log(req.query.cid, " - ", req.query.gid)
+
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+    db
   .query(
     `DELETE FROM group_list WHERE contact_id=${req.query.cid} AND group_id=${req.query.gid}`
   ).then(data=>{
     res.status(200).json({message: "Deleted"})
     
   })
+ }catch (err) {
+    res.status(500).end();
+  }
+
+  
 }
 
 module.exports = {

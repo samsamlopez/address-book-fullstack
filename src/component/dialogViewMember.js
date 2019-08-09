@@ -69,8 +69,8 @@ export default function DialogViewMember({
           <Dialog
             open={dialogOpen}
             onClose={toggleClose}
-            maxWidth="sm" 
-            fullWidth="true"
+            maxWidth={"sm"} 
+            fullWidth={true}
             aria-labelledby="alert-dialog-title"
           >
             <DialogTitle id="alert-dialog-title" style={{backgroundColor: bgColor, color: 'white'}}>
@@ -126,6 +126,9 @@ export default function DialogViewMember({
                   axios({
                     method: 'patch',
                     url: ` http://localhost:3001/api/updateName/${group.id}`,
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('token')}` 
+                    }, 
                     json: true,
                     data: postData
                   }).then(function(response){
@@ -230,6 +233,9 @@ export default function DialogViewMember({
                 axios({
                   method: 'delete',
                   url: `http://localhost:3001/api/removeMember?cid=${cidDel}&&gid=${group.id}`,
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` 
+                  }, 
                 }).then(function(response){
                   console.log(response);
                 setTimeout(()=>{

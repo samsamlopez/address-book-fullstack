@@ -67,6 +67,9 @@ export default function DialogDelete({
                   axios({
                     method: 'post',
                     url: ` http://localhost:3001/api/addGroup`,
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('token')}` 
+                    }, 
                     json: true,
                     data: postData
                   }).then(function(response){

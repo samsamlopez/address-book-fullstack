@@ -15,9 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import SearchIcon from '@material-ui/icons/Search';
@@ -70,7 +68,7 @@ export default function DialogDelete({
     return (
       <React.Fragment>
       <ToastContainer enableMultiContainer/>
-      <Dialog open={dialogOpen} onClose={toggleClose} maxWidth="xs" fullWidth="true" aria-labelledby="form-dialog-title">
+      <Dialog open={dialogOpen} onClose={toggleClose} maxWidth={"xs"} fullWidth={true} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" style={{backgroundColor: '#6d4c41', color: 'white'}}>Add Contacts to  {group_name} </DialogTitle>
         {noData?
         <DialogContent >
@@ -148,6 +146,9 @@ export default function DialogDelete({
               axios({
                 method: 'post',
                 url: ` http://localhost:3001/api/addMember?group_id=${group.id}`,
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}` 
+                }, 
                 json: true,
                 data: postData
               }).then(function(response){

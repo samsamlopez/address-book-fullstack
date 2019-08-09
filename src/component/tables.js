@@ -36,7 +36,7 @@ import DialogViewMember from './dialogViewMember';
 import DialogAddMember from './dialogAddMembers';
 import DialogDeleteGroup from './dialogDeleteGroup';
 import NoDataFound from '../images/no_data_found.png';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 const useStyles = makeStyles(theme => ({
@@ -125,21 +125,22 @@ export default function AddressBook() {
     return data.name.toLowerCase().indexOf(searchGroup.toLowerCase()) !== -1;
 
   });
-  
-
   if(stopper){
     axios({
       method: 'get',
       url: ` http://localhost:3001/api/getContact?id=${logged_userID}&&sort=${ordered}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` 
+      }, 
     }).then(function(response){
-      // console.log(...response.data)
       setContactData([...response.data])
-      setStopper(false);
+        setStopper(false);
       if(response.data.length>0){
         setContact(false)
       }else{
         setContact(true)
       }
+  
     })
   }
   
@@ -148,21 +149,23 @@ export default function AddressBook() {
     axios({
       method: 'get',
       url: `http://localhost:3001/api/getGroups?id=${logged_userID}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` 
+      }, 
     }).then(function(response){
       // console.log(...response.data)
-      setStopperG(false);
+        setStopperG(false);
       setGroupData([...response.data])   
       if(response.data.length>0){
         setGroup(false)
       }else{
         setGroup(true)
       }
+
+
     })
     
   }
-
-  
-  console.log(noContact,"-",noGroup)
 
   // http://localhost:3001/api/getGroups?id=1
 
@@ -197,7 +200,6 @@ export default function AddressBook() {
   function HandleAdd(){setDialogAdd(false)}
   function HandleDelete(){setDialogDelete(false)}
 
-  console.log(ordered);
   return (
     <React.Fragment>
     <ToastContainer enableMultiContainer/>
@@ -401,6 +403,9 @@ export default function AddressBook() {
                             axios({
                               method: 'get',
                               url: `http://localhost:3001/api/viewMember?group_id=${row.id}`,
+                              headers: {
+                                Authorization: `Bearer ${localStorage.getItem('token')}` 
+                              }, 
                             }).then(function(response){
                               // console.log(...response.data)
                               // console.log(response);
@@ -417,6 +422,9 @@ export default function AddressBook() {
                           axios({
                             method: 'get',
                             url: `  http://localhost:3001/api/memberList?group_id=${row.id}`,
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem('token')}` 
+                            }, 
                           }).then(function(response){
                             // console.log(...response.data)
                             // console.log(response);

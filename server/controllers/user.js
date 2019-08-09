@@ -102,38 +102,49 @@ function create(req, res) {
     
     const temp = [];
 
-    db.contact
-    .insert(
-      {
-        first_name,
-        last_name,
-        home_phone,
-        mobile_phone,
-        work_phone,
-        email,
-        city,
-        state_or_province,
-        postal_code,
-        country,
-      }
-    )
-    .then(data=>{
-        temp.push(data);
-        let contact_id = data.id;
-        // console.log(userId,"-",contactId);
-        
-        db.address_book
-        .insert(
-          {
-            user_id,
-            contact_id,
-          }
-        ).then(add=>{
-          console.log(add)
-          temp.push(add)
-          res.status(201).json(temp)
-        })
-    })
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, secret);
+
+      db.contact
+      .insert(
+        {
+          first_name,
+          last_name,
+          home_phone,
+          mobile_phone,
+          work_phone,
+          email,
+          city,
+          state_or_province,
+          postal_code,
+          country,
+        }
+      )
+      .then(data=>{
+          temp.push(data);
+          let contact_id = data.id;
+          // console.log(userId,"-",contactId);
+          
+          db.address_book
+          .insert(
+            {
+              user_id,
+              contact_id,
+            }
+          ).then(add=>{
+            console.log(add)
+            temp.push(add)
+            res.status(201).json(temp)
+          })
+      })
+    }
+    catch (err) {
+      res.status(500).end();
+    }
     // .catch(err => {
     //   console.error(err);
     // });
@@ -143,6 +154,14 @@ function create(req, res) {
     const db = req.app.get('db');
     const userID = req.query.id;
     // console.log(req.query.id)
+
+  
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
     db
     .query(
       `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name ${req.query.sort}`
@@ -151,6 +170,9 @@ function create(req, res) {
     .then(data=>{
       res.status(200).json(data)
     })
+  }catch (err) {
+    res.status(500).end();
+  }
   }
 
   function updateContact(req, res){
@@ -168,6 +190,13 @@ function create(req, res) {
       postal_code,
       country
     } = req.body;
+
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, secret);
 
     db.contact
     .update(
@@ -193,13 +222,24 @@ function create(req, res) {
     .catch(err => {
       console.error(err);
     })
+   }catch (err) {
+      res.status(500).end();
+    }
+
   }
 
   function deleteContact(req,res){
     const db = req.app.get('db');
     let deleted = [];
     // console.log(req.query.cid);
-    db
+
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, secret);
+      db
     .query(
       'DELETE FROM address_book WHERE contact_id=${id}',
       {
@@ -220,24 +260,51 @@ function create(req, res) {
         res.status(200).json(deleted)
       })
     })
+   }catch (err) {
+      res.status(500).end();
+    }
+    
   }
 
   function getUserDetails(req, res){
     const db = req.app.get('db');
     
     const id = req.params.id
-    console.log(id)
-    db.users
+
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, secret);
+
+      db.users
     .findOne(
       {id}
       )
     .then(data => {
       res.status(200).json(data)
     })
+   }catch (err) {
+      res.status(500).end();
+    }
+
+
+    
+
+
   }
 
   function getAllUsername(req,res){
     const db = req.app.get('db');
+
+
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, secret);
 
     db
     .query(
@@ -246,6 +313,10 @@ function create(req, res) {
     .then(data=>{
       res.status(200).json(data)
     })
+   }catch (err) {
+      res.status(500).end();
+    }
+    
   }
 
 module.exports = {

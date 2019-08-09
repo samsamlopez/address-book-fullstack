@@ -41,6 +41,9 @@ export default function DialogDelete({
                   axios({
                       method: 'delete',
                       url: `  http://localhost:3001/api/delete?cid=${deleteId}`,
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` 
+                      }, 
                     }).then(function(response){
                       
                       setTimeout(()=>{

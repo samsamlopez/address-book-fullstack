@@ -33,7 +33,7 @@ export default function DialogForm({
     return (
     <React.Fragment>
       <ToastContainer enableMultiContainer/>
-    <Dialog open={dialogOpen} onClose={closeEdit} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
+    <Dialog open={dialogOpen} onClose={closeEdit} maxWidth={"sm"} fullWidth={true} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title" style={{backgroundColor: '#6d4c41', color: 'white'}}>View or Edit Details</DialogTitle>
 
       <DialogContent style={{
@@ -212,6 +212,9 @@ export default function DialogForm({
             axios({
                 method: 'patch',
                 url: ` http://localhost:3001/api/update?cid=${cid}`,
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}` 
+                }, 
                 json: true,
                 data: postData
             }).then(function(response){

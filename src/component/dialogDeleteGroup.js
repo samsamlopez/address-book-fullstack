@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -49,6 +49,9 @@ export default function DialogDelete({
                   axios({
                     method: 'delete',
                     url: ` http://localhost:3001/api/deleteGroup?gid=${gid}`,
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('token')}` 
+                    }, 
                   }).then(function(response){
                     reset()
                     setTimeout(()=>{

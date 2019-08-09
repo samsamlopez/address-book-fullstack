@@ -46,7 +46,7 @@ export default function DialogForm({
     return (
     <React.Fragment>
       <ToastContainer enableMultiContainer/>
-    <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth="true" aria-labelledby="form-dialog-title">
+    <Dialog open={openDialog} onClose={handleClose} maxWidth={"sm"} fullWidth={true} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title" style={{backgroundColor: '#42a5f5', color:'white'}}>ADD CONTACT</DialogTitle>
 
       <DialogContent style={{
@@ -217,6 +217,9 @@ export default function DialogForm({
             axios({
               method: 'post',
               url: `http://localhost:3001/api/addContact/${userID}`,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}` 
+              }, 
               json: true,
               data: postData
             }).then(function(response){

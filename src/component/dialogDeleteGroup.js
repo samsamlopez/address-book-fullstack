@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import axios from 'axios';
@@ -13,7 +12,10 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function DialogDelete({
     dialogOpen,
+    PopClose,
     toggleClose,
+    reset,
+    gid
 }){
   
 
@@ -23,7 +25,7 @@ export default function DialogDelete({
           <ToastContainer enableMultiContainer/>
           <Dialog
             open={dialogOpen}
-            onClose={toggleClose}
+            onClose={PopClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
@@ -34,13 +36,32 @@ export default function DialogDelete({
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={toggleClose} color="primary">
+              <Button onClick={PopClose} color="primary">
                 No
               </Button>
               <Button 
  
               onClick={()=>{
+                  PopClose()
                   toggleClose()
+                  
+
+                  axios({
+                    method: 'delete',
+                    url: ` http://localhost:3001/api/deleteGroup?gid=${gid}`,
+                  }).then(function(response){
+                    reset()
+                    setTimeout(()=>{
+                      toast.error("Deleted Group",{
+                        position:toast.POSITION.TOP_RIGHT,
+                        autoClose:3696
+                      })
+                    },200)
+                  })
+
+
+                  
+                  
               }} color="primary" autoFocus>
                 Yes
               </Button>

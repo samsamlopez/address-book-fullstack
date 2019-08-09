@@ -10,11 +10,8 @@ import TextField from '@material-ui/core/TextField';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -23,8 +20,9 @@ import CancelIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import DeleteAlert from './dialogDeleteGroup';
 
-export default function DialogDelete({
+export default function DialogViewMember({
     dialogOpen,
     toggleClose,
     group,
@@ -37,8 +35,18 @@ export default function DialogDelete({
   const [editBool, setEditBool]= useState(true);
 
   const [bgColor, setBgColor] = useState('#42a5f5')
-  const [editName, setEditName] = useState('');
-  
+  const [editName, setEditName] = useState(''); 
+  const [popDel, setPopDel] = useState(false);
+
+  function PopClose(){
+    setPopDel(false);
+  }
+
+  var deleteAvailable = true;
+
+  if(contact.length > 0){
+    deleteAvailable = false;
+  }
 
     var group_name = '';
     if(group.name){
@@ -64,17 +72,27 @@ export default function DialogDelete({
                 {group_name}
               </Grid>
               <Grid>
+
                 <IconButton onClick={()=>{
                   setEditBool(false)
                   setBgColor('white')
                 }} >
                 <EditIcon style={{width:'30px',height: '30px', color: 'white'}} />
                 </IconButton>
+                
+                {deleteAvailable? 
+                  <IconButton onClick={()=>{
+                    setPopDel(true);
+                  }}>
+                  <DeleteIcon style={{width:'30px',height: '30px', color: 'white'}} />
+                  </IconButton> 
+                : null
+                }
+                
+
               </Grid>
             </Grid>
-
             :
-
             <Grid container direction='row' justify='space-between' alignItems='center' >
             <Grid item>
             <TextField
@@ -202,14 +220,12 @@ export default function DialogDelete({
 
 
                   
-                  setTimeout(()=>{
-                    toast.error("Removed Contact",{
-                      position:toast.POSITION.TOP_RIGHT,
-                      autoClose:3696
-                    })
-                  },200)
-
-
+                setTimeout(()=>{
+                  toast.error("Removed Contact",{
+                    position:toast.POSITION.TOP_RIGHT,
+                    autoClose:3696
+                  })
+                },200)
                 })
 
 
@@ -218,7 +234,13 @@ export default function DialogDelete({
               </Button>
             </DialogActions>
           </Dialog>
-
+          <DeleteAlert
+            dialogOpen = {popDel}
+            PopClose = {PopClose}
+            toggleClose = {toggleClose}
+            reset = {reset}
+            gid = {group.id}
+          />
         </div>
       );
 }

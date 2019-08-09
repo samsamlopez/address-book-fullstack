@@ -69,6 +69,7 @@ export default function SignInSide(name) {
   const [btnSignIn, setBtnSignIn] = useState(true);
 
   const token = localStorage.getItem('token');
+  console.log(token);
   if(token !== null){
     window.location.href='/#/address/';
   }
